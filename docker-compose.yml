@@ -1,0 +1,17 @@
+services:
+  php:
+    image: php:8.4-fpm
+    container_name: php-fpm
+    volumes:
+      - ./src:/var/www/html
+
+  nginx:
+    image: nginx:alpine
+    container_name: nginx
+    ports:
+      - "8080:80"
+    volumes:
+      - ./src/public:/var/www/html
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - php
