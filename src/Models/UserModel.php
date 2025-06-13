@@ -18,6 +18,13 @@ class UserModel
 		return $stmt->fetch(PDO::FETCH_ASSOC);
 	}
 
+	public function findByUsername($username)
+	{
+		$stmt = $this->pdo->prepare('SELECT * FROM users WHERE username = :username');
+		$stmt->execute([':username' => $username]);
+		return $stmt->fetch(PDO::FETCH_ASSOC);
+	}
+
 	public function updatePassword($email, $hashedPassword)
 	{
 		$stmt = $this->pdo->prepare('UPDATE users SET password = :password WHERE email = :email');

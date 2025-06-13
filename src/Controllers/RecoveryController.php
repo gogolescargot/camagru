@@ -2,7 +2,7 @@
 
 require_once __DIR__ . '/../Models/UserModel.php';
 require_once __DIR__ . '/../Models/PasswordTokenModel.php';
-require_once __DIR__ . '/../Helpers/PasswordHelper.php';
+require_once __DIR__ . '/../Helpers/FormHelper.php';
 
 class RecoveryController
 {
@@ -61,7 +61,7 @@ class RecoveryController
 			exit();
 		}
 
-		$passwordErrors = PasswordHelper::validatePassword($password);
+		$passwordErrors = FormHelper::validatePassword($password);
 
 		if (!empty($passwordErrors)) {
 			$_SESSION['error'] = $passwordErrors;

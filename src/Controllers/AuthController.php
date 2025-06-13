@@ -2,16 +2,16 @@
 
 require_once __DIR__ . '/../Models/UserModel.php';
 require_once __DIR__ . '/../Models/VerifyTokenModel.php';
-require_once __DIR__ . '/../Helpers/PasswordHelper.php';
+require_once __DIR__ . '/../Helpers/FormHelper.php';
 
 class AuthController
 {
 	public function login()
 	{
-		$email = trim($_POST['email'] ?? '');
+		$username = trim($_POST['username'] ?? '');
 		$password = trim($_POST['password'] ?? '');
 
-		if (empty($email) || empty($password)) {
+		if (empty($username) || empty($password)) {
 			$_SESSION['error'] = 'All fields are required.';
 			header('Location: /login');
 			exit();
@@ -19,7 +19,7 @@ class AuthController
 
 		try {
 			$userModel = new UserModel();
-			$user = $userModel->findByEmail($email);
+			$user = $userModel->findByUsername($username);
 
 			if ($user && password_verify($password, $user['password'])) {
 
@@ -66,7 +66,15 @@ class AuthController
 			exit();
 		}
 
-		$passwordErrors = PasswordHelper::validatePassword($password);
+		$usernameErrors = FormHelper::validateUsername($username);
+
+		if (!empty($usernameErrors)) {
+			$_SESSION['error'] = $usernameErrors;
+			header('Location: /register');
+			exit();
+		}
+
+		$passwordErrors = FormHelper::validatePassword($password);
 
 		if (!empty($passwordErrors)) {
 			$_SESSION['error'] = $passwordErrors;
