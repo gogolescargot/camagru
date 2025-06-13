@@ -5,7 +5,7 @@ require_once __DIR__ . '/../Models/UserModel.php';
 
 class VerifyAccountController
 {
-	public function verify()
+	public function verifyAccount()
 	{
 		try {
 			$token = $_GET['token'] ?? '';
@@ -20,7 +20,7 @@ class VerifyAccountController
 			}
 
 			$userModel = new UserModel();
-			$userModel->verifyUser($tokenData['email']);
+			$userModel->updateVerify(TRUE, $tokenData['user_id']);
 
 			$verifyTokenModel->deleteToken($token);
 

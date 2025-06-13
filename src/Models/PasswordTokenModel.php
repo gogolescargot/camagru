@@ -11,11 +11,11 @@ class PasswordTokenModel
 		$this->pdo = Database::getConnection();
 	}
 
-	public function createToken($email, $token, $expires_at)
+	public function createToken($user_id, $token, $expires_at)
 	{
-		$stmt = $this->pdo->prepare('INSERT INTO password_tokens (email, token, expires_at) VALUES (:email, :token, :expires_at)');
+		$stmt = $this->pdo->prepare('INSERT INTO password_tokens (user_id, token, expires_at) VALUES (:user_id, :token, :expires_at)');
 		return $stmt->execute([
-			':email' => $email,
+			':user_id' => $user_id,
 			':token' => $token,
 			':expires_at' => $expires_at,
 		]);

@@ -91,10 +91,10 @@ class AuthController
 
 		try {
 			$userModel = new UserModel();
-			$userModel->createUser($username, $email, $hashedPassword);
+			$user_id = $userModel->createUser($username, $email, $hashedPassword);
 
 			$verifyTokenModel = new VerifyTokenModel();
-			$tokenData = $verifyTokenModel->createToken($email, $token);
+			$tokenData = $verifyTokenModel->createToken($user_id, $token);
 
 			if (!mail($email, $subject, $message)) {
 				throw new Exception('Failed to send email.');

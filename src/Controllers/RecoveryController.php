@@ -23,9 +23,6 @@ class RecoveryController
 		$message = "Click the link below to reset your password:\n\nhttp://localhost:8080/reset-password?token=$token";
 
 		try {
-			$passwordTokenModel = new PasswordTokenModel();
-			$passwordTokenModel->createToken($email, $token, $expires_at);
-
 			$userModel = new UserModel();
 			$user = $userModel->findByEmail($email);
 
@@ -33,6 +30,9 @@ class RecoveryController
 				header('Location: /home');
 				exit();
 			}
+
+			$passwordTokenModel = new PasswordTokenModel();
+			$passwordTokenModel->createToken($user['id'], $token, $expires_at);
 
 			if (!mail($email, $subject, $message)) {
 				throw new Exception('Failed to send email.');
@@ -61,7 +61,7 @@ class RecoveryController
 			exit();
 		}
 
-		$passwordErrors = FormHelper::validatePassword($password);
+		$passwordErrors = FormHelper::validatePassword($newPassword);
 
 		if (!empty($passwordErrors)) {
 			$_SESSION['error'] = $passwordErrors;
@@ -82,7 +82,8 @@ class RecoveryController
 			$hashedPassword = password_hash($newPassword, PASSWORD_DEFAULT);
 
 			$userModel = new UserModel();
-			$userModel->updatePassword($tokenData['email'], $hashedPassword);
+			$user = $userModel->findById($tokenData['user_id']);
+			$userModel->updatePassword($hashedPassword, $user['id']);
 
 			$passwordTokenModel->deleteToken($token);
 

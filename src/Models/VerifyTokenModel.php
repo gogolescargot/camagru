@@ -11,11 +11,11 @@ class VerifyTokenModel
 		$this->pdo = Database::getConnection();
 	}
 
-	public function createToken($email, $token)
+	public function createToken($user_id, $token)
 	{
-		$stmt = $this->pdo->prepare('INSERT INTO verify_tokens (email, token) VALUES (:email, :token)');
+		$stmt = $this->pdo->prepare('INSERT INTO verify_tokens (user_id, token) VALUES (:user_id, :token)');
 		return $stmt->execute([
-			':email' => $email,
+			':user_id' => $user_id,
 			':token' => $token,
 		]);
 	}
