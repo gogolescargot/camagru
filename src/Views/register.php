@@ -20,6 +20,9 @@
 				<label for="password">Password:</label>
 				<input type="password" id="password" name="password" required>
 
+				<label for="password">Confirm password:</label>
+				<input type="password" id="confirm-password" name="confirm-password" required>
+
 				<button type="submit">Register</button>
 			</form>
 		<main>

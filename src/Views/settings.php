@@ -16,11 +16,22 @@
 				<label for="username">Username:</label>
 				<input type="text" id="username" name="username" value="<?php echo htmlspecialchars($username); ?>" placeholder="Enter new username">
 
+				<button type="submit">Submit</button>
+			</form>
+
+			<form action="/edit-account" method="POST">
 				<label for="email">Email:</label>
 				<input type="email" id="email" name="email" value="<?php echo htmlspecialchars($email); ?>" placeholder="Enter new email">
 
+				<button type="submit">Submit</button>
+			</form>
+
+			<form action="/edit-account" method="POST">
 				<label for="password">Password:</label>
 				<input type="password" id="password" name="password" placeholder="Enter new password">
+
+				<label for="password">Confirm password:</label>
+				<input type="password" id="confirm-password" name="confirm-password" placeholder="Confirm new password">
 
 				<button type="submit">Submit</button>
 			</form>

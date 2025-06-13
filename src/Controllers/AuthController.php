@@ -53,8 +53,9 @@ class AuthController
 		$username = trim($_POST['username'] ?? '');
 		$email = trim($_POST['email'] ?? '');
 		$password = trim($_POST['password'] ?? '');
+		$confirmPassword = trim($_POST['confirm-password'] ?? '');
 
-		if (empty($username) || empty($email) || empty($password)) {
+		if (empty($username) || empty($email) || empty($password) || empty($confirmPassword)) {
 			$_SESSION['error'] = 'All fields are required.';
 			header('Location: /register');
 			exit();
@@ -70,6 +71,12 @@ class AuthController
 
 		if (!empty($usernameErrors)) {
 			$_SESSION['error'] = $usernameErrors;
+			header('Location: /register');
+			exit();
+		}
+
+		if ($password !== $confirmPassword) {
+			$_SESSION['error'] = 'Passwords do not match.';
 			header('Location: /register');
 			exit();
 		}

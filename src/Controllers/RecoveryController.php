@@ -54,9 +54,16 @@ class RecoveryController
 	{
 		$token = $_POST['token'] ?? '';
 		$newPassword = $_POST['password'] ?? '';
+		$newConfirmPassword = $_POST['confirm-password'] ?? '';
 
-		if (empty($newPassword)) {
+		if (empty($newPassword) || empty($newConfirmPassword)) {
 			$_SESSION['error'] = 'All fields are required.';
+			header("Location: /reset-password?token=$token");
+			exit();
+		}
+
+		if ($newPassword !== $newConfirmPassword) {
+			$_SESSION['error'] = 'Passwords do not match.';
 			header("Location: /reset-password?token=$token");
 			exit();
 		}

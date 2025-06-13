@@ -19,9 +19,10 @@ class EditAccountController
 			$userModel = new UserModel();
 			$user = $userModel->findById($_SESSION['user_id']);
 
-			$newUsername = trim($_POST['username']) ?? '';
-			$newEmail = trim($_POST['email']) ?? '';
-			$newPassword = trim($_POST['password']) ?? '';
+			$newUsername = isset($_POST['username']) ? trim($_POST['username']) : '';
+			$newEmail = isset($_POST['email']) ? trim($_POST['email']) : '';
+			$newPassword = isset($_POST['password']) ? trim($_POST['password']) : '';
+			$newConfirmPassword = isset($_POST['confirm-password']) ? trim($_POST['confirm-password']) : '';
 
 			if ($newUsername != $user['username'] && !empty($newUsername)) {
 				$usernameErrors = FormHelper::validateUsername($newUsername);
@@ -75,7 +76,13 @@ class EditAccountController
 				exit();
 			}
 
-			if (!empty($newPassword)) {
+			if (!empty($newPassword) || !empty($newConfirmPassword)) {
+
+				if ($newPassword !== $newConfirmPassword) {
+					$_SESSION['error'] = 'Passwords do not match.';
+					header('Location: /settings');
+					exit();
+				}
 
 				$passwordErrors = FormHelper::validatePassword($newPassword);
 
