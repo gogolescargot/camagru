@@ -13,4 +13,10 @@ CREATE TABLE IF NOT EXISTS password_tokens (
 	expires_at DATETIME NOT NULL
 );
 
+CREATE TABLE IF NOT EXISTS verify_tokens (
+	id INT AUTO_INCREMENT PRIMARY KEY,
+	email VARCHAR(255) NOT NULL,
+	token VARCHAR(64) NOT NULL
+);
+
 -- DELETE FROM password_resets WHERE expires_at < NOW();

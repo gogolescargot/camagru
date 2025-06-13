@@ -20,12 +20,6 @@
 				<button type="submit">Login</button>
 			</form>
 			<a href="/forgot-password">Forgot Password</a>
-			<?php
-			if (isset($_SESSION['error'])) {
-				echo '<p style="color: red;">' . htmlspecialchars($_SESSION['error']) . '</p>';
-				unset($_SESSION['error']);
-			}
-			?>
 		<main>
 	</body>
 </html>

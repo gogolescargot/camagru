@@ -2,17 +2,12 @@
 
 require_once __DIR__ . '/../Models/UserModel.php';
 require_once __DIR__ . '/../Models/PasswordTokenModel.php';
+require_once __DIR__ . '/../Helpers/PasswordHelper.php';
 
 class RecoveryController
 {
 	public function sendPasswordReset()
 	{
-		if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-			$_SESSION['error'] = 'Invalid request method.';
-			header('Location: /forgot-password');
-			exit();
-		}
-
 		$email = trim($_POST['email'] ?? '');
 
 		if (empty($email)) {
@@ -39,16 +34,13 @@ class RecoveryController
 				exit();
 			}
 
-			if (mail($email, $subject, $message)) {
-				$_SESSION['success'] = "If an account linked with this email exists, a password reset email has been sent successfully.";
-				header('Location: /home');
-				exit();
+			if (!mail($email, $subject, $message)) {
+				throw new Exception('Failed to send email.');
 			}
-			else {
-				$_SESSION['error'] = 'Failed to send email.';
-				header('Location: /forgot-password');
-				exit();
-			}
+
+			$_SESSION['info'] = "If an account linked with this email exists, a password reset email has been sent successfully.";
+			header('Location: /home');
+			exit();
 		}
 		catch (Exception $e) {
 			error_log($e->getMessage());
@@ -59,18 +51,20 @@ class RecoveryController
 	}
 
 	public function resetPassword()
-	{	
-		if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-			$_SESSION['error'] = 'Invalid request method.';
-			header('Location: /reset-password');
-			exit();
-		}
-
+	{
 		$token = $_POST['token'] ?? '';
 		$newPassword = $_POST['password'] ?? '';
 
 		if (empty($newPassword)) {
 			$_SESSION['error'] = 'All fields are required.';
+			header("Location: /reset-password?token=$token");
+			exit();
+		}
+
+		$passwordErrors = PasswordHelper::validatePassword($password);
+
+		if (!empty($passwordErrors)) {
+			$_SESSION['error'] = $passwordErrors;
 			header("Location: /reset-password?token=$token");
 			exit();
 		}

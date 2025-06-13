@@ -27,6 +27,14 @@ class UserModel
 		]);
 	}
 
+	public function verifyUser($email)
+	{
+		$stmt = $this->pdo->prepare('UPDATE users SET verified = TRUE WHERE email = :email');
+		return $stmt->execute([
+			':email' => $email,
+		]);
+	}
+
 	public function createUser($username, $email, $hashedPassword)
 	{
 		$stmt = $this->pdo->prepare('INSERT INTO users (username, email, password) VALUES (:username, :email, :password)');

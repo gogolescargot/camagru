@@ -14,6 +14,7 @@ $router->addRoute('GET', '/register', 'RegisterController', 'index');
 $router->addRoute('GET', '/login', 'LoginController', 'index');
 $router->addRoute('GET', '/forgot-password', 'ForgotPasswordController', 'index');
 $router->addRoute('GET', '/reset-password', 'ResetPasswordController', 'index');
+$router->addRoute('GET', '/verify-account', 'VerifyAccountController', 'verify');
 
 $router->addRoute('POST', '/login', 'AuthController', 'login');
 $router->addRoute('POST', '/register', 'AuthController', 'register');

@@ -16,12 +16,6 @@
 				<input type="password" id="password" name="password" required>
 				<button type="submit">Reset Password</button>
 			</form>
-			<?php
-			if (isset($_SESSION['error'])) {
-				echo '<p style="color: red;">' . htmlspecialchars($_SESSION['error']) . '</p>';
-				unset($_SESSION['error']);
-			}
-			?>
 		<main>
 	</body>
 </html>

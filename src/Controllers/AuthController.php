@@ -1,18 +1,13 @@
 <?php
 
 require_once __DIR__ . '/../Models/UserModel.php';
+require_once __DIR__ . '/../Models/VerifyTokenModel.php';
+require_once __DIR__ . '/../Helpers/PasswordHelper.php';
 
 class AuthController
 {
 	public function login()
 	{
-
-		if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-			$_SESSION['error'] = 'Invalid request method.';
-			header('Location: /login');
-			exit();
-		}
-
 		$email = trim($_POST['email'] ?? '');
 		$password = trim($_POST['password'] ?? '');
 
@@ -27,8 +22,15 @@ class AuthController
 			$user = $userModel->findByEmail($email);
 
 			if ($user && password_verify($password, $user['password'])) {
+
+				if ($user["verified"] == FALSE) {
+					$_SESSION['error'] = 'Your account is not verified. Please check your email to verify your account.';
+					header('Location: /login');
+					exit();
+				}
+
 				$_SESSION['user_id'] = $user['id'];
-				$_SESSION['success'] = "You are logged in.";
+				$_SESSION['success'] = "Login successful. Welcome back!";
 				header('Location: /home');
 				exit();
 			}
@@ -48,12 +50,6 @@ class AuthController
 
 	public function register()
 	{
-		if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-			$_SESSION['error'] = 'Invalid request method.';
-			header('Location: /register');
-			exit();
-		}
-
 		$username = trim($_POST['username'] ?? '');
 		$email = trim($_POST['email'] ?? '');
 		$password = trim($_POST['password'] ?? '');
@@ -70,13 +66,33 @@ class AuthController
 			exit();
 		}
 
+		$passwordErrors = PasswordHelper::validatePassword($password);
+
+		if (!empty($passwordErrors)) {
+			$_SESSION['error'] = $passwordErrors;
+			header('Location: /register');
+			exit();
+		}
+
 		$hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+
+		$token = bin2hex(random_bytes(32));
+
+		$subject = "Account Verification";
+		$message = "Click the link below to verify your account:\n\nhttp://localhost:8080/verify-account?token=$token";
 
 		try {
 			$userModel = new UserModel();
 			$userModel->createUser($username, $email, $hashedPassword);
 
-			$_SESSION['success'] = 'Registration successful. You can now log in.';
+			$verifyTokenModel = new VerifyTokenModel();
+			$tokenData = $verifyTokenModel->createToken($email, $token);
+
+			if (!mail($email, $subject, $message)) {
+				throw new Exception('Failed to send email.');
+			}
+
+			$_SESSION['info'] = 'A confirmation email has been sent to verify your account.';
 			header('Location: /login');
 			exit();
 		}

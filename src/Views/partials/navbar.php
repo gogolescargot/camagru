@@ -11,4 +11,18 @@
 			<?php endif; ?>
 		</ul>
 	</nav>
+	<?php
+	if (isset($_SESSION['success'])) {
+		echo '<p style="color: green;">' . htmlspecialchars($_SESSION['success']) . '</p>';
+		unset($_SESSION['success']);
+	}
+	if (isset($_SESSION['info'])) {
+		echo '<p style="color: blue;">' . htmlspecialchars($_SESSION['info']) . '</p>';
+		unset($_SESSION['info']);
+	}
+	if (isset($_SESSION['error'])) {
+		echo '<p style="color: red;">' . htmlspecialchars($_SESSION['error']) . '</p>';
+		unset($_SESSION['error']);
+	}
+	?>
 </header>
