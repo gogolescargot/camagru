@@ -3,8 +3,9 @@
 namespace Controllers;
 
 use Core\Database;
+use Core\ErrorHandler;
 use Models\UserModel;
-use Models\VerifyTokenModel;
+use Models\TokenModel;
 
 class VerifyAccountController
 {
@@ -14,37 +15,33 @@ class VerifyAccountController
 			$token = $_GET['token'] ?? '';
 
 			$pdo = Database::getConnection();
-			$pdo->beginTransaction();
 
-			$verifyTokenModel = new VerifyTokenModel($pdo);
-			$tokenData = $verifyTokenModel->findValidToken($token);
+			$tokenModel = new TokenModel($pdo);
+			$userModel = new UserModel($pdo);
+
+			$tokenData = $tokenModel->findValidToken($token);
 
 			if (!$tokenData) {
-				$_SESSION['error'] = 'Invalid or expired token.';
-				header('Location: /login');
-				exit();
+				ErrorHandler::handleError(
+					'Invalid or expired token.',
+					'/login',
+					500,
+					False
+				);
 			}
 
-			$userModel = new UserModel($pdo);
+			$pdo->beginTransaction();
 			$userModel->updateVerify(TRUE, $tokenData['user_id']);
-
-			$verifyTokenModel->deleteToken($token);
-
+			$tokenModel->deleteToken($token);
 			$pdo->commit();
 
 			$_SESSION['success'] = 'Your account has been verified successfully. You can now log in.';
 			header('Location: /home');
 			exit();
 		}
-		catch (Exception $e) {
-			if (isset($pdo)) {
-				$pdo->rollBack();
-			}
-			error_log($e->getMessage());
-			$_SESSION['error'] = 'An error occurred while processing your request. Please try again later.';
-			header('Location: /login');
-			exit();
+		catch (\Exception $e) {
+			ErrorHandler::rollbackTransaction($pdo);
+			ErrorHandler::handleException($e);
 		}
-
 	}
 }

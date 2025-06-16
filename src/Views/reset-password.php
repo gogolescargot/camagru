@@ -12,10 +12,13 @@
 			<h1>Reset password</h1>
 			<form action="/reset-password" method="POST">
 				<input type="hidden" name="token" value="<?php echo htmlspecialchars($_GET['token'] ?? ''); ?>">
+
 				<label for="password">New password:</label>
 				<input type="password" id="password" name="password" required>
+
 				<label for="password">Confirm new password:</label>
 				<input type="password" id="confirm-password" name="confirm-password" required>
+
 				<button type="submit">Reset password</button>
 			</form>
 		<main>

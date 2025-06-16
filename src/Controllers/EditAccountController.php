@@ -3,110 +3,196 @@
 namespace Controllers;
 
 use Core\Database;
+use Core\ErrorHandler;
 use Helpers\FormHelper;
-use Models\EmailTokenModel;
+use Models\TokenModel;
 use Models\UserModel;
 
 class EditAccountController
 {
-	public function editAccount()
+	public function editUsername()
 	{
 		try {
 			if (!isset($_SESSION['user_id'])) {
-				$_SESSION['error'] = 'You must be logged in to perform this action.';
-				header('Location: /home');
-				exit();
+				ErrorHandler::handleError(
+					'You must be logged in to perform this action.',
+					'/home',
+					403,
+					False
+				);
 			}
 
 			$pdo = Database::getConnection();
-			$pdo->beginTransaction();
 
 			$userModel = new UserModel($pdo);
+
 			$user = $userModel->findById($_SESSION['user_id']);
 
 			$newUsername = isset($_POST['username']) ? trim($_POST['username']) : '';
+
+			if ($newUsername === $user['username']) {
+				header('Location: /settings');
+				exit();
+			}
+
+			$usernameErrors = FormHelper::validateUsername($newUsername);
+
+			if (!empty($usernameErrors)) {
+				ErrorHandler::handleError(
+					$usernameErrors,
+					'/settings',
+					400,
+					False
+				);
+			}
+
+			if (!empty($userModel->findByUsername($newUsername))) {
+				ErrorHandler::handleError(
+					'This username is already taken.',
+					'/settings',
+					400,
+					False
+				);
+			}
+
+			$pdo->beginTransaction();
+			$userModel->updateUsername($newUsername, $user['id']);
+			$pdo->commit();
+
+			$_SESSION['success'] = 'Your username has been successfully updated.';
+			header('Location: /settings');
+			exit();
+		}
+		catch (\Exception $e) {
+			ErrorHandler::rollbackTransaction($pdo);
+			ErrorHandler::handleException($e);
+		}
+	}
+
+	public function editEmail()
+	{
+		try {
+			if (!isset($_SESSION['user_id'])) {
+				ErrorHandler::handleError(
+					'You must be logged in to perform this action.',
+					'/home',
+					403,
+					false
+				);
+			}
+
+			$pdo = Database::getConnection();
+
+			$userModel = new UserModel($pdo);
+			$tokenModel = new TokenModel($pdo);
+
+			$user = $userModel->findById($_SESSION['user_id']);
+
 			$newEmail = isset($_POST['email']) ? trim($_POST['email']) : '';
-			$newPassword = isset($_POST['password']) ? trim($_POST['password']) : '';
-			$newConfirmPassword = isset($_POST['confirm-password']) ? trim($_POST['confirm-password']) : '';
 
-			if ($newUsername != $user['username'] && !empty($newUsername)) {
-				$usernameErrors = FormHelper::validateUsername($newUsername);
-
-				if (!empty($usernameErrors)) {
-					$_SESSION['error'] = $usernameErrors;
-					header('Location: /settings');
-					exit();
-				}
-
-				if (!empty($userModel->findByUsername($newUsername))) {
-					$_SESSION['error'] = 'This username is already taken.';
-					header('Location: /settings');
-					exit();
-				}
-
-				$userModel->updateUsername($newUsername, $user['id']);
+			if ($newEmail === $user['email']) {
+				header('Location: /settings');
+				exit();
+			}
+			
+			if (!filter_var($newEmail, FILTER_VALIDATE_EMAIL)) {
+				ErrorHandler::handleError(
+					'Invalid email format.',
+					'/settings',
+					400,
+					False
+				);
 			}
 
-			if ($newEmail != $user['email'] && !empty($newEmail)) {
-				if (!filter_var($newEmail, FILTER_VALIDATE_EMAIL)) {
-					$_SESSION['error'] = 'Invalid email address.';
-					header('Location: /settings');
-					exit();
-				}
-
-				if (!empty($userModel->findByEmail($newEmail))) {
-					$_SESSION['error'] = 'This email is already registered.';
-					header('Location: /settings');
-					exit();
-				}
-
-				$token = bin2hex(random_bytes(32));
-				$subject = "Email Verification";
-				$message = "Click the link below to verify your email:\n\nhttp://localhost:8080/edit-email?token=$token";
-
-				$emailTokenModel = new EmailTokenModel($pdo);
-				$emailTokenModel->cleanOldToken($user['id']);
-				$emailTokenModel->createToken($user['id'], $newEmail, $token);
-
-				if (!mail($newEmail, $subject, $message)) {
-					throw new Exception('Failed to send email.');
-				}
-
-				$_SESSION['info'] = 'A confirmation email has been sent to verify your email.';
+			if (!empty($userModel->findByEmail($newEmail))) {
+				ErrorHandler::handleError(
+					'This email is already registered.',
+					'/settings',
+					400,
+					False
+				);
 			}
 
-			if (!empty($newPassword) || !empty($newConfirmPassword)) {
-				if ($newPassword !== $newConfirmPassword) {
-					$_SESSION['error'] = 'Passwords do not match.';
-					header('Location: /settings');
-					exit();
-				}
+			$token = bin2hex(random_bytes(32));
+			$subject = "Email Verification";
+			$message = "Click the link below to verify your email:\n\nhttp://localhost:8080/edit-email?token=$token";
 
-				$passwordErrors = FormHelper::validatePassword($newPassword);
+			$expires_at = date('Y-m-d H:i:s', time() + 3600);
 
-				if (!empty($passwordErrors)) {
-					$_SESSION['error'] = $passwordErrors;
-					header('Location: /settings');
-					exit();
-				}
 
-				$hashedPassword = password_hash($newPassword, PASSWORD_DEFAULT);
-				$userModel->updatePassword($hashedPassword, $user['id']);
+			$pdo->beginTransaction();
+			$tokenModel->cleanOldEmailToken($user['id']);
+			$tokenModel->createToken($user['id'], $token, 'email_change', $expires_at, $newEmail);
+
+			if (!mail($newEmail, $subject, $message)) {
+				throw new Exception('Failed to send email.');
 			}
 
 			$pdo->commit();
 
-			$_SESSION['success'] = 'Your profile has been successfully updated.';
+			$_SESSION['info'] = 'A confirmation email has been sent to verify your email.';
 			header('Location: /settings');
 			exit();
-		} catch (Exception $e) {
-			if (isset($pdo)) {
-				$pdo->rollBack();
+		}
+		catch (\Exception $e) {
+			ErrorHandler::rollbackTransaction($pdo);
+			ErrorHandler::handleException($e);
+		}
+	}
+
+	public function editPassword()
+	{
+		try {
+			if (!isset($_SESSION['user_id'])) {
+				ErrorHandler::handleError(
+					'You must be logged in to perform this action.',
+					'/home',
+					403,
+					false
+				);
 			}
-			error_log($e->getMessage());
-			$_SESSION['error'] = 'An error occurred while processing your request. Please try again later.';
+
+			$pdo = Database::getConnection();
+
+			$userModel = new UserModel($pdo);
+			$user = $userModel->findById($_SESSION['user_id']);
+
+			$newPassword = isset($_POST['password']) ? trim($_POST['password']) : '';
+			$newConfirmPassword = isset($_POST['confirm-password']) ? trim($_POST['confirm-password']) : '';
+
+			if ($newPassword !== $newConfirmPassword) {
+				ErrorHandler::handleError(
+					'Passwords do not match.',
+					'/settings',
+					400,
+					False
+				);
+			}
+
+			$passwordErrors = FormHelper::validatePassword($newPassword);
+
+			if (!empty($passwordErrors)) {
+				ErrorHandler::handleError(
+					$passwordErrors,
+					'/settings',
+					400,
+					False
+				);
+			}
+
+			$hashedPassword = password_hash($newPassword, PASSWORD_DEFAULT);
+
+			$pdo->beginTransaction();
+			$userModel->updatePassword($hashedPassword, $user['id']);
+			$pdo->commit();
+
+			$_SESSION['success'] = 'Your password has been successfully updated.';
 			header('Location: /settings');
 			exit();
+		}
+		catch (\Exception $e) {
+			ErrorHandler::rollbackTransaction($pdo);
+			ErrorHandler::handleException($e);
 		}
 	}
 }

@@ -4,19 +4,19 @@ namespace Controllers;
 
 use Core\ErrorHandler;
 
-class LoginController
+class StudioController
 {
 	public function index()
 	{
-		if (isset($_SESSION['user_id'])) {
+		if (!isset($_SESSION['user_id'])) {
 			ErrorHandler::handleError(
-				'You are already logged in.',
+				'You must be logged in to perform this action.',
 				'/home',
 				403,
 				False
 			);
 		}
 
-		include __DIR__ . '/../Views/login.php';
+		include __DIR__ . '/../Views/studio.php';
 	}
 }

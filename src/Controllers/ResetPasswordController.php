@@ -3,37 +3,42 @@
 namespace Controllers;
 
 use Core\Database;
-use Models\PasswordTokenModel;
+use Core\ErrorHandler;
+use Models\TokenModel;
 
 class ResetPasswordController
 {
 	public function index()
 	{
-		if (isset($_SESSION['user_id'])) {
-			header('Location: /home');
-			exit();
-		}
-
-		$token = $_GET['token'] ?? '';
-
 		try {
+			if (isset($_SESSION['user_id'])) {
+				ErrorHandler::handleError(
+					'You must not be logged in to perform this action.',
+					'/home',
+					500,
+					False
+				);
+			}
+
+			$token = $_GET['token'] ?? '';
+
 			$pdo = Database::getConnection();
-			$passwordTokenModel = new PasswordTokenModel($pdo);
-			$tokenData = $passwordTokenModel->findValidToken($token);
+			$tokenModel = new TokenModel($pdo);
+			$tokenData = $tokenModel->findValidToken($token);
 
 			if (!$tokenData) {
-				$_SESSION['error'] = 'Invalid or expired token.';
-				header('Location: /forgot-password');
-				exit();
+				ErrorHandler::handleError(
+					'Invalid or expired token.',
+					'/forgot-password',
+					500,
+					False
+				);
 			}
-		}
-		catch (PDOException $e) {
-			error_log($e->getMessage());
-			$_SESSION['error'] = 'An error occurred while processing your request. Please try again later.';
-			header('Location: /forgot-password');
-			exit();
-		}
 
-		include __DIR__ . '/../Views/reset-password.php';
+			include __DIR__ . '/../Views/reset-password.php';
+		}
+		catch (\Exception $e) {
+			ErrorHandler::handleException($e);
+		}
 	}
 }

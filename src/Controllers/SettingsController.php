@@ -3,26 +3,34 @@
 namespace Controllers;
 
 use Core\Database;
+use Core\ErrorHandler;
 use Models\UserModel;
 
 class SettingsController
 {
 	public function index()
 	{
-		if (!isset($_SESSION['user_id'])) {
-			header('Location: /home');
-			exit();
-		}
-
 		try {
+			if (!isset($_SESSION['user_id'])) {
+				ErrorHandler::handleError(
+					'You must be logged in to perform this action.',
+					'/home',
+					403,
+					False
+				);
+			}
+
 			$pdo = Database::getConnection();
 			$userModel = new UserModel($pdo);
 			$user = $userModel->findById($_SESSION['user_id']);
 
 			if (!$user) {
-				$_SESSION['error'] = 'An error occurred while processing your request. Please contact an administrator.';
-				header('Location: /settings');
-				exit();
+				ErrorHandler::handleError(
+					'User not found in the database. Please check the system integrity.',
+					'/home',
+					500,
+					True
+				);
 			}
 
 			$username = htmlspecialchars($user['username']);
@@ -30,11 +38,8 @@ class SettingsController
 
 			$emailNotifications = TRUE;
 		}
-		catch (Exception $e) {
-			error_log($e->getMessage());
-			$_SESSION['error'] = 'An error occurred while processing your request. Please try again later.';
-			header('Location: /settings');
-			exit();
+		catch (\Exception $e) {
+			ErrorHandler::handleException($e);
 		}
 
 		include __DIR__ . '/../Views/settings.php';
