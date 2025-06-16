@@ -1,14 +1,16 @@
 <?php
 
-require_once __DIR__ . '/../Core/Database.php';
+namespace Models;
+
+use PDO;
 
 class PasswordTokenModel
 {
 	private $pdo;
 
-	public function __construct()
+	public function __construct($pdo)
 	{
-		$this->pdo = Database::getConnection();
+		$this->pdo = $pdo;
 	}
 
 	public function createToken($user_id, $token, $expires_at)

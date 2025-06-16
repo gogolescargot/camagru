@@ -1,6 +1,9 @@
 <?php
 
-require_once __DIR__ . '/../Models/UserModel.php';
+namespace Controllers;
+
+use Core\Database;
+use Models\UserModel;
 
 class SettingsController
 {
@@ -12,7 +15,8 @@ class SettingsController
 		}
 
 		try {
-			$userModel = new UserModel();
+			$pdo = Database::getConnection();
+			$userModel = new UserModel($pdo);
 			$user = $userModel->findById($_SESSION['user_id']);
 
 			if (!$user) {

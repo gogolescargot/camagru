@@ -1,5 +1,7 @@
 <?php
 
+namespace Controllers;
+
 class RegisterController
 {
 	public function index()

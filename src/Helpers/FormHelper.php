@@ -1,5 +1,7 @@
 <?php
 
+namespace Helpers;
+
 class FormHelper
 {
     public static function validatePassword($password)

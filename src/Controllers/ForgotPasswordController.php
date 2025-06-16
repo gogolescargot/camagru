@@ -1,5 +1,7 @@
 <?php
 
+namespace Controllers;
+
 class ForgotPasswordController
 {
 	public function index()

@@ -1,8 +1,11 @@
 <?php
 
-require_once __DIR__ . '/../Models/UserModel.php';
-require_once __DIR__ . '/../Models/VerifyTokenModel.php';
-require_once __DIR__ . '/../Helpers/FormHelper.php';
+namespace Controllers;
+
+use Core\Database;
+use Helpers\FormHelper;
+use Models\UserModel;
+use Models\VerifyTokenModel;
 
 class AuthController
 {
@@ -18,7 +21,9 @@ class AuthController
 		}
 
 		try {
-			$userModel = new UserModel();
+			$pdo = Database::getConnection();
+			$userModel = new UserModel($pdo);
+
 			$user = $userModel->findByUsername($username);
 
 			if ($user && password_verify($password, $user['password'])) {
@@ -97,21 +102,29 @@ class AuthController
 		$message = "Click the link below to verify your account:\n\nhttp://localhost:8080/verify-account?token=$token";
 
 		try {
-			$userModel = new UserModel();
-			$user_id = $userModel->createUser($username, $email, $hashedPassword);
+			$pdo = Database::getConnection();
+			$userModel = new UserModel($pdo);
+			$verifyTokenModel = new VerifyTokenModel($pdo);
 
-			$verifyTokenModel = new VerifyTokenModel();
+			$pdo->beginTransaction();
+
+			$user_id = $userModel->createUser($username, $email, $hashedPassword);
 			$tokenData = $verifyTokenModel->createToken($user_id, $token);
 
 			if (!mail($email, $subject, $message)) {
 				throw new Exception('Failed to send email.');
 			}
 
+			$pdo->commit();
+
 			$_SESSION['info'] = 'A confirmation email has been sent to verify your account.';
 			header('Location: /login');
 			exit();
 		}
 		catch (Exception $e) {
+			if (isset($pdo)) {
+				$pdo->rollBack();
+			}
 			error_log($e->getMessage());
 			$_SESSION['error'] = 'An error occurred while registering. Please try again.';
 			header('Location: /register');

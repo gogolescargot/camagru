@@ -1,5 +1,7 @@
 <?php
 
+namespace Core;
+
 class Router
 {
 	private $routes = [];
@@ -21,17 +23,23 @@ class Router
 
 		foreach ($this->routes as $route) {
 			if ($route['path'] === $path && $route['method'] === $requestMethod) {
-				require_once __DIR__ . '/../Controllers/' . $route['controller'] . '.php';
+				$controllerClass = 'Controllers\\' . $route['controller'];
 
-				$controllerClass = new $route['controller']();
+				if (!class_exists($controllerClass)) {
+					http_response_code(500);
+					echo "Error 500: Controller '$controllerClass' not found.";
+					return;
+				}
+
+				$controllerInstance = new $controllerClass();
 				$action = $route['action'];
 
-				if (method_exists($controllerClass, $action)) {
-					$controllerClass->$action();
+				if (method_exists($controllerInstance, $action)) {
+					$controllerInstance->$action();
 				}
 				else {
 					http_response_code(500);
-					echo "Error 500: Action '$action' not found in controller '{$route['controller']}'";
+					echo "Error 500: Action '$action' not found in controller '$controllerClass'.";
 				}
 
 				return;

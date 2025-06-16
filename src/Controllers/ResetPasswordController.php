@@ -1,6 +1,9 @@
 <?php
 
-require_once __DIR__ . '/../Models/PasswordTokenModel.php';
+namespace Controllers;
+
+use Core\Database;
+use Models\PasswordTokenModel;
 
 class ResetPasswordController
 {
@@ -14,7 +17,8 @@ class ResetPasswordController
 		$token = $_GET['token'] ?? '';
 
 		try {
-			$passwordTokenModel = new PasswordTokenModel();
+			$pdo = Database::getConnection();
+			$passwordTokenModel = new PasswordTokenModel($pdo);
 			$tokenData = $passwordTokenModel->findValidToken($token);
 
 			if (!$tokenData) {

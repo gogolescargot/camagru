@@ -1,9 +1,11 @@
 <?php
 
-require_once __DIR__ . '/../Models/UserModel.php';
-require_once __DIR__ . '/../Models/EmailTokenModel.php';
-require_once __DIR__ . '/../Models/VerifyTokenModel.php';
-require_once __DIR__ . '/../Helpers/FormHelper.php';
+namespace Controllers;
+
+use Core\Database;
+use Helpers\FormHelper;
+use Models\EmailTokenModel;
+use Models\UserModel;
 
 class EditAccountController
 {
@@ -16,7 +18,10 @@ class EditAccountController
 				exit();
 			}
 
-			$userModel = new UserModel();
+			$pdo = Database::getConnection();
+			$pdo->beginTransaction();
+
+			$userModel = new UserModel($pdo);
 			$user = $userModel->findById($_SESSION['user_id']);
 
 			$newUsername = isset($_POST['username']) ? trim($_POST['username']) : '';
@@ -33,9 +38,8 @@ class EditAccountController
 					exit();
 				}
 
-				if (!empty($userModel->findByUsername($newUsername)))
-				{
-					$_SESSION['error'] = 'An error occurred while processing your request. Please try again later.';
+				if (!empty($userModel->findByUsername($newUsername))) {
+					$_SESSION['error'] = 'This username is already taken.';
 					header('Location: /settings');
 					exit();
 				}
@@ -44,7 +48,6 @@ class EditAccountController
 			}
 
 			if ($newEmail != $user['email'] && !empty($newEmail)) {
-
 				if (!filter_var($newEmail, FILTER_VALIDATE_EMAIL)) {
 					$_SESSION['error'] = 'Invalid email address.';
 					header('Location: /settings');
@@ -52,32 +55,27 @@ class EditAccountController
 				}
 
 				if (!empty($userModel->findByEmail($newEmail))) {
-					$_SESSION['error'] = 'An error occurred while processing your request. Please try again later.';
+					$_SESSION['error'] = 'This email is already registered.';
 					header('Location: /settings');
 					exit();
 				}
-
-				
 
 				$token = bin2hex(random_bytes(32));
 				$subject = "Email Verification";
 				$message = "Click the link below to verify your email:\n\nhttp://localhost:8080/edit-email?token=$token";
 
-				$emailTokenModel = new EmailTokenModel();
+				$emailTokenModel = new EmailTokenModel($pdo);
 				$emailTokenModel->cleanOldToken($user['id']);
-				$tokenData = $emailTokenModel->createToken($user['id'], $newEmail, $token);
+				$emailTokenModel->createToken($user['id'], $newEmail, $token);
 
 				if (!mail($newEmail, $subject, $message)) {
 					throw new Exception('Failed to send email.');
 				}
 
 				$_SESSION['info'] = 'A confirmation email has been sent to verify your email.';
-				header('Location: /settings');
-				exit();
 			}
 
 			if (!empty($newPassword) || !empty($newConfirmPassword)) {
-
 				if ($newPassword !== $newConfirmPassword) {
 					$_SESSION['error'] = 'Passwords do not match.';
 					header('Location: /settings');
@@ -93,15 +91,18 @@ class EditAccountController
 				}
 
 				$hashedPassword = password_hash($newPassword, PASSWORD_DEFAULT);
-				
 				$userModel->updatePassword($hashedPassword, $user['id']);
 			}
+
+			$pdo->commit();
 
 			$_SESSION['success'] = 'Your profile has been successfully updated.';
 			header('Location: /settings');
 			exit();
-		}
-		catch (Exception $e) {
+		} catch (Exception $e) {
+			if (isset($pdo)) {
+				$pdo->rollBack();
+			}
 			error_log($e->getMessage());
 			$_SESSION['error'] = 'An error occurred while processing your request. Please try again later.';
 			header('Location: /settings');

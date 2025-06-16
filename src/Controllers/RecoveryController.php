@@ -1,8 +1,11 @@
 <?php
 
-require_once __DIR__ . '/../Models/UserModel.php';
-require_once __DIR__ . '/../Models/PasswordTokenModel.php';
-require_once __DIR__ . '/../Helpers/FormHelper.php';
+namespace Controllers;
+
+use Core\Database;
+use Helpers\FormHelper;
+use Models\PasswordTokenModel;
+use Models\UserModel;
 
 class RecoveryController
 {
@@ -23,26 +26,35 @@ class RecoveryController
 		$message = "Click the link below to reset your password:\n\nhttp://localhost:8080/reset-password?token=$token";
 
 		try {
-			$userModel = new UserModel();
+			$pdo = Database::getConnection();
+			$pdo->beginTransaction();
+
+			$userModel = new UserModel($pdo);
 			$user = $userModel->findByEmail($email);
 
 			if (!$user) {
+				$_SESSION['info'] = "If an account linked with this email exists, a password reset email has been sent successfully.";
 				header('Location: /home');
 				exit();
 			}
 
-			$passwordTokenModel = new PasswordTokenModel();
+			$passwordTokenModel = new PasswordTokenModel($pdo);
 			$passwordTokenModel->createToken($user['id'], $token, $expires_at);
 
 			if (!mail($email, $subject, $message)) {
 				throw new Exception('Failed to send email.');
 			}
 
+			$pdo->commit();
+
 			$_SESSION['info'] = "If an account linked with this email exists, a password reset email has been sent successfully.";
 			header('Location: /home');
 			exit();
-		}
+		} 
 		catch (Exception $e) {
+			if (isset($pdo)) {
+				$pdo->rollBack();
+			}
 			error_log($e->getMessage());
 			$_SESSION['error'] = 'An error occurred while processing your request. Please try again later.';
 			header('Location: /forgot-password');
@@ -77,7 +89,10 @@ class RecoveryController
 		}
 
 		try {
-			$passwordTokenModel = new PasswordTokenModel();
+			$pdo = Database::getConnection();
+			$pdo->beginTransaction();
+
+			$passwordTokenModel = new PasswordTokenModel($pdo);
 			$tokenData = $passwordTokenModel->findValidToken($token);
 
 			if (!$tokenData) {
@@ -88,17 +103,22 @@ class RecoveryController
 
 			$hashedPassword = password_hash($newPassword, PASSWORD_DEFAULT);
 
-			$userModel = new UserModel();
+			$userModel = new UserModel($pdo);
 			$user = $userModel->findById($tokenData['user_id']);
 			$userModel->updatePassword($hashedPassword, $user['id']);
 
 			$passwordTokenModel->deleteToken($token);
+
+			$pdo->commit();
 
 			$_SESSION['success'] = 'Password updated successfully.';
 			header('Location: /login');
 			exit();
 		}
 		catch (Exception $e) {
+			if (isset($pdo)) {
+				$pdo->rollBack();
+			}
 			error_log($e->getMessage());
 			$_SESSION['error'] = 'An error occurred while processing your request. Please try again later.';
 			header("Location: /reset-password?token=$token");
