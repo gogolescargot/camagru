@@ -1,0 +1,23 @@
+body {
+	font-family: monospace;
+	font-size: large;
+}
+
+.post {
+	border: 3px solid black;
+	padding: 20px;
+	margin-bottom: 50px;
+}
+
+.post .image {
+	max-width: 250px;
+	max-height: 250px;
+	width: auto;
+	height: auto;
+}
+
+.comments-container {
+	border: 3px solid black;
+	padding: 20px;
+	margin-bottom: 50px;
+}

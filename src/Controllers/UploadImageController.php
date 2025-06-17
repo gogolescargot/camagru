@@ -4,6 +4,7 @@ namespace Controllers;
 
 use Core\Database;
 use Core\ErrorHandler;
+use Models\PostModel;
 
 class UploadImageController
 {
@@ -54,8 +55,9 @@ class UploadImageController
 				);
 			}
 
-			$uploadDir = __DIR__ . '/../uploads/';
-			$destPath = $uploadDir . uniqid() . '.' . $fileExtension;
+			$uploadDir = '/var/www/html/uploads/';
+			$uploadName = uniqid() . '.' . $fileExtension;
+			$destPath = $uploadDir . $uploadName;
 
 			if (!is_dir($uploadDir) || !is_writable($uploadDir)) {
 				ErrorHandler::handleError(
@@ -75,7 +77,16 @@ class UploadImageController
 				);
 			}
 
-			$_SESSION['success'] = 'Image uploaded successfully!';
+			$title = isset($_POST['title']) ? trim($_POST['title']) : '';
+
+			$pdo = Database::getConnection(); 
+			$postModel = new PostModel($pdo);
+
+			$pdo->beginTransaction();
+			$postModel->createPost($_SESSION["user_id"], $title, $uploadName);
+			$pdo->commit();
+
+			$_SESSION['success'] = "Image uploaded successfully!";
 			header('Location: /home');
 			exit();
 		}

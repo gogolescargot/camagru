@@ -13,15 +13,15 @@ class AuthController
 	public function login()
 	{
 		try {
-			$username = trim($_POST['username'] ?? '');
-			$password = trim($_POST['password'] ?? '');
+			$username = isset($_POST['username']) ? trim($_POST['username']) : '';
+			$password = isset($_POST['password']) ? trim($_POST['password']) : '';
 
 			if (empty($username) || empty($password)) {
 				ErrorHandler::handleError(
 					'All fields are required.',
 					'/login',
 					400,
-					false
+					False
 				);
 			}
 
@@ -31,12 +31,12 @@ class AuthController
 			$user = $userModel->findByUsername($username);
 
 			if ($user && password_verify($password, $user['password'])) {
-				if ($user["verified"] == false) {
+				if ($user["verified"] == False) {
 					ErrorHandler::handleError(
 						'Your account is not verified. Please check your email to verify your account.',
 						'/login',
 						403,
-						false
+						False
 					);
 				}
 
@@ -54,7 +54,7 @@ class AuthController
 					'Invalid username or password.',
 					'/login',
 					400,
-					false
+					False
 				);
 			}
 		}
@@ -66,17 +66,17 @@ class AuthController
 	public function register()
 	{
 		try {
-			$username = trim($_POST['username'] ?? '');
-			$email = trim($_POST['email'] ?? '');
-			$password = trim($_POST['password'] ?? '');
-			$confirmPassword = trim($_POST['confirm-password'] ?? '');
+			$username = isset($_POST['username']) ? trim($_POST['username']) : '';
+			$email = isset($_POST['email']) ? trim($_POST['email']) : '';
+			$password = isset($_POST['password']) ? trim($_POST['password']) : '';
+			$confirmPassword = isset($_POST['confirm-password']) ? trim($_POST['confirm-password']) : '';
 
 			if (empty($username) || empty($email) || empty($password) || empty($confirmPassword)) {
 				ErrorHandler::handleError(
 					'All fields are required.',
 					'/register',
 					400,
-					false
+					False
 				);
 			}
 
@@ -85,7 +85,7 @@ class AuthController
 					'Invalid email address.',
 					'/register',
 					400,
-					false
+					False
 				);
 			}
 
@@ -96,7 +96,7 @@ class AuthController
 					$usernameErrors,
 					'/register',
 					400,
-					false
+					False
 				);
 			}
 
@@ -105,7 +105,7 @@ class AuthController
 					'Passwords do not match.',
 					'/register',
 					400,
-					false
+					False
 				);
 			}
 
@@ -116,7 +116,7 @@ class AuthController
 					$passwordErrors,
 					'/register',
 					400,
-					false
+					False
 				);
 			}
 
@@ -135,7 +135,7 @@ class AuthController
 					'This username is already taken.',
 					'/register',
 					400,
-					false
+					False
 				);
 			}
 
@@ -144,7 +144,7 @@ class AuthController
 					'This email is already registered.',
 					'/register',
 					400,
-					false
+					False
 				);
 			}
 

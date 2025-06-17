@@ -13,14 +13,15 @@ class RecoveryController
 	public function sendPasswordReset()
 	{
 		try {
-			$email = trim($_POST['email'] ?? '');
+			
+			$email = isset($_POST['email']) ? trim($_POST['email']) : '';
 
 			if (empty($email)) {
 				ErrorHandler::handleError(
 					'All fields are required.',
 					'/forgot-password',
 					400,
-					false
+					False
 				);
 			}
 
@@ -64,16 +65,16 @@ class RecoveryController
 	public function resetPassword()
 	{
 		try {
-			$token = $_POST['token'] ?? '';
-			$newPassword = $_POST['password'] ?? '';
-			$newConfirmPassword = $_POST['confirm-password'] ?? '';
+			$token = isset($_POST['token']) ? trim($_POST['token']) : '';
+			$newPassword = isset($_POST['password']) ? trim($_POST['password']) : '';
+			$newConfirmPassword = isset($_POST['confirm-password']) ? trim($_POST['confirm-password']) : '';
 
 			if (empty($newPassword) || empty($newConfirmPassword)) {
 				ErrorHandler::handleError(
 					'All fields are required.',
 					"/reset-password?token=$token",
 					400,
-					false
+					False
 				);
 			}
 
@@ -82,7 +83,7 @@ class RecoveryController
 					'Passwords do not match.',
 					"/reset-password?token=$token",
 					400,
-					false
+					False
 				);
 			}
 
@@ -93,7 +94,7 @@ class RecoveryController
 					$passwordErrors,
 					"/reset-password?token=$token",
 					400,
-					false
+					False
 				);
 			}
 
@@ -107,7 +108,7 @@ class RecoveryController
 					'Invalid or expired token.',
 					'/forgot-password',
 					400,
-					false
+					False
 				);
 			}
 

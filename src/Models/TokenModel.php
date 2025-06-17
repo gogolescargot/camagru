@@ -18,7 +18,7 @@ class TokenModel
 	{
 		try {
 			$stmt = $this->pdo->prepare('INSERT INTO tokens (user_id, token, type, new_email, expires_at) VALUES (:user_id, :token, :type, :new_email, :expires_at)');
-			return $stmt->execute([
+			$stmt->execute([
 				':user_id' => $user_id,
 				':token' => $token,
 				':type' => $type,
@@ -35,7 +35,7 @@ class TokenModel
 	{
 		try {
 			$stmt = $this->pdo->prepare('DELETE FROM tokens WHERE token = :token');
-			return $stmt->execute([':token' => $token]);
+			$stmt->execute([':token' => $token]);
 		}
 		catch (PDOException $e) {
 			throw $e;

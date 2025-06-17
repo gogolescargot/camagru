@@ -18,8 +18,6 @@ class EditEmailController
 
 			$token = $_GET['token'] ?? '';
 
-			
-
 			$tokenData = $tokenModel->findValidToken($token);
 
 			if (!$tokenData) {
@@ -27,7 +25,7 @@ class EditEmailController
 					'Invalid or expired token.',
 					'/home',
 					400,
-					false
+					False
 				);
 			}
 

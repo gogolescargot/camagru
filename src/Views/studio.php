@@ -4,7 +4,7 @@
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<title>Studio</title>
-		<link rel="stylesheet" href="/css/styles.css">
+		<link rel="stylesheet" href="/css/style.css">
 	</head>
 	<body>
 		<?php include __DIR__ . '/partials/navbar.php'; ?>
@@ -13,6 +13,9 @@
 			<form action="/upload" method="POST" enctype="multipart/form-data">
 				<label for="image">Image:</label>
 				<input type="file" id="image" name="image" accept="image/*" required>
+
+				<label for="title">Title:</label>
+				<input type="text" id="title" name="title">
 
 				<button type="submit">Upload</button>
 			</form>

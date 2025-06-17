@@ -30,7 +30,15 @@ $router->addRoute('POST', '/reset-password', 'RecoveryController', 'resetPasswor
 $router->addRoute('POST', '/edit-username', 'EditAccountController', 'editUsername');
 $router->addRoute('POST', '/edit-email', 'EditAccountController', 'editEmail');
 $router->addRoute('POST', '/edit-password', 'EditAccountController', 'editPassword');
+$router->addRoute('POST', '/edit-preferences', 'EditAccountController', 'editEmailNotifications');
 
 $router->addRoute('POST', '/upload', 'UploadImageController', 'uploadImage');
+
+$router->addRoute('POST', '/like', 'PostController', 'likePost');
+
+$router->addRoute('POST', '/comment', 'PostController', 'createCommentPost');
+$router->addRoute('POST', '/delete-comment', 'PostController', 'deleteCommentPost');
+
+$router->addRoute('POST', '/delete-post', 'PostController', 'deletePost');
 
 $router->handleRequest($_SERVER['REQUEST_URI']);

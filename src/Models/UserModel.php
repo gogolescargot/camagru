@@ -106,6 +106,20 @@ class UserModel
 		}
 	}
 
+	public function updateEmailNotifications($email_notifications, $id)
+	{
+		try {
+			$stmt = $this->pdo->prepare('UPDATE users SET email_notifications = :email_notifications WHERE id = :id');
+			$stmt->execute([
+				':email_notifications' => $email_notifications,
+				':id' => $id,
+			]);
+		}
+		catch (PDOException $e) {
+			throw $e;
+		}
+	}
+
 	public function createUser($username, $email, $hashedPassword)
 	{
 		try {
@@ -119,7 +133,6 @@ class UserModel
 			return $this->pdo->lastInsertId();
 		}
 		catch (PDOException $e) {
-			// header('Location: /home');
 			throw $e;
 		}
 	}

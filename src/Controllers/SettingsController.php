@@ -36,12 +36,12 @@ class SettingsController
 			$username = htmlspecialchars($user['username']);
 			$email = htmlspecialchars($user['email']);
 
-			$emailNotifications = TRUE;
+			$emailNotifications = $user['email_notifications'];
+
+			include __DIR__ . '/../Views/settings.php';
 		}
 		catch (\Exception $e) {
 			ErrorHandler::handleException($e);
 		}
-
-		include __DIR__ . '/../Views/settings.php';
 	}
 }

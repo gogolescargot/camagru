@@ -77,7 +77,7 @@ class EditAccountController
 					'You must be logged in to perform this action.',
 					'/home',
 					403,
-					false
+					False
 				);
 			}
 
@@ -148,7 +148,7 @@ class EditAccountController
 					'You must be logged in to perform this action.',
 					'/home',
 					403,
-					false
+					False
 				);
 			}
 
@@ -187,6 +187,38 @@ class EditAccountController
 			$pdo->commit();
 
 			$_SESSION['success'] = 'Your password has been successfully updated.';
+			header('Location: /settings');
+			exit();
+		}
+		catch (\Exception $e) {
+			ErrorHandler::rollbackTransaction($pdo);
+			ErrorHandler::handleException($e);
+		}
+	}
+
+	public function editEmailNotifications()
+	{
+		try {
+			if (!isset($_SESSION['user_id'])) {
+				ErrorHandler::handleError(
+					'You must be logged in to perform this action.',
+					'/home',
+					403,
+					False
+				);
+			}
+
+			$pdo = Database::getConnection();
+
+			$userModel = new UserModel($pdo);
+
+			$emailNotifications = isset($_POST['email-notifications']);
+
+			$pdo->beginTransaction();
+			$userModel->updateEmailNotifications((int)$emailNotifications, $_SESSION['user_id']);
+			$pdo->commit();
+
+			$_SESSION['success'] = 'Your notification preferences have been successfully updated.';
 			header('Location: /settings');
 			exit();
 		}
