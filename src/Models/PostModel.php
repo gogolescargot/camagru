@@ -14,10 +14,10 @@ class PostModel
 		$this->pdo = $pdo;
 	}
 
-	public function createPost($user_id, $title, $image_path)
+	public function createPost($user_id, $title, $image)
 	{
 		try {
-			$stmt = $this->pdo->prepare('INSERT INTO posts (user_id, title, image_path) VALUES (:user_id, :title, :image_path)');
+			$stmt = $this->pdo->prepare('INSERT INTO posts (user_id, title, image) VALUES (:user_id, :title, :image_path)');
 			$stmt->execute([
 				':user_id' => $user_id,
                 ':title' => $title,

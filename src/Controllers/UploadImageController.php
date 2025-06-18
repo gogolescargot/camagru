@@ -4,7 +4,7 @@ namespace Controllers;
 
 use Core\Database;
 use Core\ErrorHandler;
-use Models\PostModel;
+use Models\ImageModel;
 
 class UploadImageController
 {
@@ -50,7 +50,7 @@ class UploadImageController
 				ErrorHandler::handleError(
 					'File size exceeds the maximum limit of 20MB.',
 					'/studio',
-					500,
+					413,
 					False
 				);
 			}
@@ -77,17 +77,15 @@ class UploadImageController
 				);
 			}
 
-			$title = isset($_POST['title']) ? trim($_POST['title']) : '';
-
 			$pdo = Database::getConnection(); 
-			$postModel = new PostModel($pdo);
+			$imageModel = new ImageModel($pdo);
 
 			$pdo->beginTransaction();
-			$postModel->createPost($_SESSION["user_id"], $title, $uploadName);
+			$imageModel->createImage($_SESSION["user_id"], $uploadName);
 			$pdo->commit();
 
 			$_SESSION['success'] = "Image uploaded successfully!";
-			header('Location: /home');
+			header('Location: /studio');
 			exit();
 		}
 		catch (\Exception $e) {

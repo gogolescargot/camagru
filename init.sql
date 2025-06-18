@@ -4,48 +4,54 @@ CREATE TABLE IF NOT EXISTS users (
 	email VARCHAR(255) NOT NULL UNIQUE,
 	password VARCHAR(255) NOT NULL,
 	verified BOOLEAN DEFAULT FALSE,
-    email_notifications BOOLEAN DEFAULT TRUE
+	email_notifications BOOLEAN DEFAULT TRUE
 );
 
 CREATE TABLE IF NOT EXISTS tokens (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    user_id INT NOT NULL,
-    token VARCHAR(64) NOT NULL,
-    type ENUM('password_reset', 'email_verification', 'email_change') NOT NULL,
+	id INT AUTO_INCREMENT PRIMARY KEY,
+	user_id INT NOT NULL,
+	token VARCHAR(64) NOT NULL,
+	type ENUM('password_reset', 'email_verification', 'email_change') NOT NULL,
 	new_email VARCHAR(255),
-    expires_at DATETIME,
-    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+	expires_at DATETIME,
+	FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
 	UNIQUE (new_email, type)
 );
 
-CREATE TABLE IF NOT EXISTS posts (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    user_id INT NOT NULL,
-    title VARCHAR(255),
-    image_path VARCHAR(255) NOT NULL UNIQUE,
+CREATE TABLE IF NOT EXISTS images (
+	id INT AUTO_INCREMENT PRIMARY KEY,
+	user_id INT NOT NULL,
+	path VARCHAR(255) NOT NULL UNIQUE,
 	created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
-	
+	FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS posts (
+	id INT AUTO_INCREMENT PRIMARY KEY,
+	user_id INT NOT NULL,
+	title VARCHAR(255),
+	image INT NOT NULL,
+	created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+	FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+	FOREIGN KEY (image) REFERENCES images(id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS likes (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    user_id INT NOT NULL,
-    post_id INT NOT NULL,
+	id INT AUTO_INCREMENT PRIMARY KEY,
+	user_id INT NOT NULL,
+	post_id INT NOT NULL,
 	created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
-    FOREIGN KEY (post_id) REFERENCES posts(id) ON DELETE CASCADE,
-    UNIQUE (user_id, post_id)
+	FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+	FOREIGN KEY (post_id) REFERENCES posts(id) ON DELETE CASCADE,
+	UNIQUE (user_id, post_id)
 );
 
 CREATE TABLE IF NOT EXISTS comments (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    user_id INT NOT NULL,
-    post_id INT NOT NULL,
-    content VARCHAR(500) NOT NULL,
+	id INT AUTO_INCREMENT PRIMARY KEY,
+	user_id INT NOT NULL,
+	post_id INT NOT NULL,
+	content VARCHAR(500) NOT NULL,
 	created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
-    FOREIGN KEY (post_id) REFERENCES posts(id) ON DELETE CASCADE
+	FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+	FOREIGN KEY (post_id) REFERENCES posts(id) ON DELETE CASCADE
 );
-
--- DELETE FROM password_resets WHERE expires_at < NOW();

@@ -41,4 +41,6 @@ $router->addRoute('POST', '/delete-comment', 'PostController', 'deleteCommentPos
 
 $router->addRoute('POST', '/delete-post', 'PostController', 'deletePost');
 
+$router->addRoute('POST', '/delete-image', 'ImageController', 'deleteImage');
+
 $router->handleRequest($_SERVER['REQUEST_URI']);

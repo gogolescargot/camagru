@@ -3,6 +3,7 @@
 namespace Controllers;
 
 use Core\Database;
+use Core\ErrorHandler;
 use Models\PostModel;
 use Models\UserModel;
 

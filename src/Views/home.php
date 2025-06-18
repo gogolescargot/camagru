@@ -10,7 +10,7 @@
 		<?php include __DIR__ . '/partials/navbar.php'; ?>
 		<main>
 			<h1>Home</h1>
-			<div class="posts-container">
+			<div id="posts-container">
 				<?php if (empty($posts)): ?>
 					<p>No posts yet.</p>
 				<?php else: ?>

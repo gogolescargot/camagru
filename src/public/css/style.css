@@ -21,3 +21,69 @@ body {
 	padding: 20px;
 	margin-bottom: 50px;
 }
+
+#upload-container {
+	margin-bottom: 20px;
+}
+
+#galleries-container {
+	display: flex;
+	align-items: center;
+	border: 3px solid black;
+	padding: 20px;
+	margin-bottom: 50px;
+}
+
+.gallery .image {
+	max-width: 100px;
+	max-height: 100px;
+	width: auto;
+	height: auto;
+	margin-right: 20px;
+}
+
+#studio-container {
+	display: grid;
+	justify-content: center;
+	align-items: center;
+	border: 3px solid black;
+	padding: 20px;
+}
+
+#webcam {
+	max-width: 500px;
+	max-height: 500px;
+	border: 2px solid black;
+}
+
+.author {
+	font-weight: bold;
+}
+
+.success {
+	color: green;
+}
+
+.info {
+	color: blue;
+}
+
+.error {
+	color: red;
+}
+
+#webcam-button {
+	display: none;
+	text-align: center;
+}
+
+#webcam-error {
+	display: none;
+	color: red;
+	text-align: center;
+}
+
+#input-error {
+	display: none;
+	color: red;
+}
