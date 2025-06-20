@@ -20,6 +20,6 @@
 				<button type="submit">Login</button>
 			</form>
 			<a href="/forgot-password">Forgot Password</a>
-		<main>
+		</main>
 	</body>
 </html>

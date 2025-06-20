@@ -58,6 +58,11 @@ class ImageController
 			$pdo->beginTransaction();
 			$imageModel->deleteImage($imageId);
 			$pdo->commit();
+
+			$imagePath = '/var/www/html/uploads/' . $image['path'];
+			if (file_exists($imagePath)) {
+				unlink($imagePath);
+			}
 			
 			$_SESSION['success'] = "Image deleted successfully!";
 			header('Location: /studio');

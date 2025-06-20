@@ -21,6 +21,6 @@
 
 				<button type="submit">Reset password</button>
 			</form>
-		<main>
+		</main>
 	</body>
 </html>

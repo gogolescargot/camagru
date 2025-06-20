@@ -45,6 +45,6 @@
 
 				<button type="submit">Submit</button>
 			</form>
-		<main>
+		</main>
 	</body>
 </html>

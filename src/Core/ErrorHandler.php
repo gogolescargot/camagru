@@ -47,4 +47,28 @@ class ErrorHandler
 
 		exit();
 	}
+
+	public static function handleJsonResponse($message, $isCritical)
+	{
+		$isAdmin = isset($_SESSION['role']) && $_SESSION['role'] === 'admin';
+
+		header('Content-Type: application/json');
+
+		if ($isCritical && !$isAdmin) {
+			echo json_encode([
+				'success' => false,
+				'message' => 'An error occurred while processing your request. Please try again later.',
+			]);
+		}
+		else {
+			echo json_encode([
+				'success' => false,
+				'message' => $message,
+			]);
+		}
+
+		error_log("[User ID: " . ($_SESSION['user_id'] ?? 'guest') . "] " . $message);
+		exit();
+	}
+	
 }

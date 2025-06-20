@@ -43,14 +43,33 @@ body {
 }
 
 #studio-container {
-	display: grid;
-	justify-content: center;
-	align-items: center;
 	border: 3px solid black;
 	padding: 20px;
 }
 
 #webcam {
+	max-width: 500px;
+	max-height: 500px;
+	border: 2px solid black;
+}
+
+#webcam-container {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+#canvas-container {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+#webcam-canvas {
+	display: none;
+}
+
+#canvas-frame {
 	max-width: 500px;
 	max-height: 500px;
 	border: 2px solid black;
@@ -72,14 +91,15 @@ body {
 	color: red;
 }
 
-#webcam-button {
+#webcam-error, #canvas-error {
 	display: none;
+	color: red;
 	text-align: center;
 }
 
-#webcam-error {
+#webcam-success, #canvas-success {
 	display: none;
-	color: red;
+	color: green;
 	text-align: center;
 }
 

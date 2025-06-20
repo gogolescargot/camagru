@@ -33,6 +33,7 @@ $router->addRoute('POST', '/edit-password', 'EditAccountController', 'editPasswo
 $router->addRoute('POST', '/edit-preferences', 'EditAccountController', 'editEmailNotifications');
 
 $router->addRoute('POST', '/upload', 'UploadImageController', 'uploadImage');
+$router->addRoute('POST', '/upload-webcam', 'WebcamController', 'uploadWebcam');
 
 $router->addRoute('POST', '/like', 'PostController', 'likePost');
 
@@ -42,5 +43,7 @@ $router->addRoute('POST', '/delete-comment', 'PostController', 'deleteCommentPos
 $router->addRoute('POST', '/delete-post', 'PostController', 'deletePost');
 
 $router->addRoute('POST', '/delete-image', 'ImageController', 'deleteImage');
+
+$router->addRoute('GET', '/gallery', 'StudioController', 'gallery');
 
 $router->handleRequest($_SERVER['REQUEST_URI']);
