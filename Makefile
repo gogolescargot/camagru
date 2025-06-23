@@ -15,6 +15,7 @@ stop: down
 
 clean:
 	docker compose down -v
+	rm -rf src/uploads src/public/uploads
 
 fclean: clean
 	rm -rf uploads/* src/public/uploads/.[!.]*

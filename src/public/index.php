@@ -32,14 +32,13 @@ $router->addRoute('POST', '/edit-email', 'EditAccountController', 'editEmail');
 $router->addRoute('POST', '/edit-password', 'EditAccountController', 'editPassword');
 $router->addRoute('POST', '/edit-preferences', 'EditAccountController', 'editEmailNotifications');
 
-$router->addRoute('POST', '/upload', 'UploadImageController', 'uploadImage');
-$router->addRoute('POST', '/upload-webcam', 'WebcamController', 'uploadWebcam');
 
 $router->addRoute('POST', '/like', 'PostController', 'likePost');
 
 $router->addRoute('POST', '/comment', 'PostController', 'createCommentPost');
 $router->addRoute('POST', '/delete-comment', 'PostController', 'deleteCommentPost');
 
+$router->addRoute('POST', '/create-post', 'PostController', 'createPost');
 $router->addRoute('POST', '/delete-post', 'PostController', 'deletePost');
 
 $router->addRoute('POST', '/delete-image', 'ImageController', 'deleteImage');

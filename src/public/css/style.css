@@ -53,26 +53,40 @@ body {
 	border: 2px solid black;
 }
 
-#webcam-container {
+#edit-container {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+#preview-container {
 	display: flex;
 	flex-direction: column;
 	align-items: center;
 }
 
-#canvas-container {
+#image-container {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+#stickers-container {
 	display: flex;
 	flex-direction: column;
 	align-items: center;
+}
+
+.sticker {
+	max-width: 150px;
+	max-height: 150px;
 }
 
 #webcam-canvas {
-	display: none;
-}
-
-#canvas-frame {
-	max-width: 500px;
-	max-height: 500px;
+	/* max-width: 500px;
+	max-height: 500px; */
 	border: 2px solid black;
+	display: block;
 }
 
 .author {
@@ -91,13 +105,13 @@ body {
 	color: red;
 }
 
-#webcam-error, #canvas-error {
+#studio-error {
 	display: none;
 	color: red;
 	text-align: center;
 }
 
-#webcam-success, #canvas-success {
+#studio-success {
 	display: none;
 	color: green;
 	text-align: center;

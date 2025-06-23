@@ -4,6 +4,7 @@ namespace Controllers;
 
 use Core\Database;
 use Core\ErrorHandler;
+use Helpers\ImageHelper;
 use Models\PostModel;
 use Models\UserModel;
 
@@ -182,6 +183,88 @@ class PostController
 		}
 		catch (\Exception $e) {
 			ErrorHandler::rollbackTransaction($pdo);
+			ErrorHandler::handleException($e);
+		}
+	}
+
+	public function createPost()
+	{
+		try {
+			if (!isset($_SESSION['user_id'])) {
+				ErrorHandler::ErrorHandler::handleError(
+					'You must be logged in to perform this action.',
+					'/home',
+					403,
+					False
+				);
+			}
+
+			$title = isset($_POST['title']) ? trim($_POST['title']) : '';
+
+			if (!isset($_FILES['image-post']) || $_FILES['image-post']['error'] !== UPLOAD_ERR_OK) {
+				ErrorHandler::handleJsonResponse(
+					ImageHelper::getUploadErrorMessage($_FILES['image-post']['error'] ?? null),
+					True
+				);
+			}
+
+			$fileTmpPath = $_FILES['image-post']['tmp_name'];
+			$fileName = $_FILES['image-post']['name'];
+			$fileSize = $_FILES['image-post']['size'];
+			$fileType = $_FILES['image-post']['type'];
+			$fileExtension = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
+
+			$allowedExtensions = ['jpg', 'jpeg', 'png', 'gif'];
+			if (!in_array($fileExtension, $allowedExtensions)) {
+				ErrorHandler::handleJsonResponse(
+					'Invalid file type. Only JPG, JPEG, PNG, and GIF are allowed.',
+					False
+				);
+			}
+
+			$maxFileSize = 20 * 1024 * 1024;
+			if ($fileSize > $maxFileSize) {
+				ErrorHandler::handleJsonResponse(
+					'File size exceeds the maximum limit of 20MB.',
+					False
+				);
+			}
+
+			$uploadDir = '/var/www/html/uploads/';
+			$uploadName = uniqid() . '.' . $fileExtension;
+			$destPath = $uploadDir . $uploadName;
+
+			if (!is_dir($uploadDir) || !is_writable($uploadDir)) {
+				ErrorHandler::handleJsonResponse(
+					"Upload directory does not exist or is not writable: $uploadDir.",
+					True
+				);
+			}
+
+			if (!move_uploaded_file($fileTmpPath, $destPath)) {
+				ErrorHandler::handleJsonResponse(
+					'There was an error moving the uploaded file.',
+					True
+				);
+			}
+
+			$pdo = Database::getConnection(); 
+			$postModel = new PostModel($pdo);
+
+			$pdo->beginTransaction();
+			$postModel->createPost($_SESSION["user_id"], $title, $uploadName);
+			$pdo->commit();
+
+			$_SESSION['success'] = 'Post created successfully!';
+			header('Content-Type: application/json');
+			echo json_encode([
+				'success' => true,
+				'message' => 'Image uploaded successfully!',
+				'redirect' => '/home',
+			]);
+			exit();
+		}
+		catch (\Exception $e) {
 			ErrorHandler::handleException($e);
 		}
 	}
