@@ -151,6 +151,20 @@ class PostModel
 		}
 	}
 
+	public function getLastUserPosts($limit, $user_id)
+	{
+		try {
+			$stmt = $this->pdo->prepare('SELECT * FROM posts WHERE user_id = :user_id ORDER BY created_at DESC LIMIT :limit');
+			$stmt->bindValue(':user_id', $user_id, PDO::PARAM_INT);
+			$stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
+			$stmt->execute();
+			return $stmt->fetchAll(PDO::FETCH_ASSOC);
+		}
+		catch (PDOException $e) {
+			throw $e;
+		}
+	}
+
 	public function getLikesForPostIds($postIds)
 		{
 			if (empty($postIds)) {

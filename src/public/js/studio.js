@@ -1,6 +1,7 @@
 import { b64toBlob } from './b64toBlob.js';
 
 const MAX_SIZE = 20 * 1024 * 1024;
+const CANVA_SIZE = 720
 const studioError = document.getElementById('studio-error');
 const studioSuccess = document.getElementById('studio-success');
 const webcamCanvas = document.getElementById('webcam-canvas');
@@ -35,8 +36,8 @@ function initializeWebcam() {
 	navigator.mediaDevices
 		.getUserMedia({
 			video: {
-				width: { ideal: 720 },
-				height: { ideal: 720 },
+				width: { ideal: CANVA_SIZE },
+				height: { ideal: CANVA_SIZE },
 				aspectRatio: 1,
 			},
 		})
@@ -53,7 +54,7 @@ function initializeWebcam() {
 
 function handlePostButtonClick() {
 	if (stickersOnCanvas.length === 0) {
-		displayError('You need to add at least one sticker to snap an image.');
+		displayError('You need to add at least one sticker to post an image.');
 		return;
 	}
 
@@ -84,7 +85,7 @@ function handlePostButtonClick() {
 		.then((response) => response.json())
 		.then((data) => {
 			if (data.success) {
-				displaySuccess('Post created successfully!');
+		displaySuccess('Post created successfully!');
 				window.location.href = data.redirect;
 			} else {
 				displayError(data.message || 'An error occurred.');
@@ -127,8 +128,10 @@ function handleCanvasDrop(e) {
 	if (!draggedStickerSrc) return;
 
 	const rect = webcamCanvas.getBoundingClientRect();
-	const x = e.clientX - rect.left;
-	const y = e.clientY - rect.top;
+	const ratio = CANVA_SIZE / rect.width;
+
+	const x = (e.clientX - rect.left) * ratio;
+	const y = (e.clientY - rect.top) * ratio;
 
 	stickersOnCanvas.push({ src: draggedStickerSrc, x, y });
 	drawStickers();
@@ -146,10 +149,10 @@ function drawWebcam() {
 	if (!isUsingWebcam) return;
 
 	if (video.readyState === video.HAVE_ENOUGH_DATA) {
-		webcamCanvas.width = 720;
-		webcamCanvas.height = 720;
+		webcamCanvas.width = CANVA_SIZE;
+		webcamCanvas.height = CANVA_SIZE;
 		const ctx = webcamCanvas.getContext('2d');
-		ctx.drawImage(video, 0, 0, 720, 720);
+		ctx.drawImage(video, 0, 0, CANVA_SIZE, CANVA_SIZE);
 
 		drawStickers();
 	}
@@ -162,17 +165,17 @@ function drawImage(file) {
 		const img = new Image();
 		img.src = event.target.result;
 		img.onload = () => {
-			webcamCanvas.width = 720;
-			webcamCanvas.height = 720;
+			webcamCanvas.width = CANVA_SIZE;
+			webcamCanvas.height = CANVA_SIZE;
 
 			const ctx = webcamCanvas.getContext('2d');
 			ctx.clearRect(0, 0, webcamCanvas.width, webcamCanvas.height);
 
-			const scale = Math.min(720 / img.width, 720 / img.height);
+			const scale = Math.min(CANVA_SIZE / img.width, CANVA_SIZE / img.height);
 			const width = img.width * scale;
 			const height = img.height * scale;
-			const x = (720 - width) / 2;
-			const y = (720 - height) / 2;
+			const x = (CANVA_SIZE - width) / 2;
+			const y = (CANVA_SIZE - height) / 2;
 
 			ctx.drawImage(img, x, y, width, height);
 

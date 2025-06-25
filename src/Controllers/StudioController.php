@@ -3,6 +3,7 @@
 namespace Controllers;
 
 use Core\Database;
+use Models\PostModel;
 use Core\ErrorHandler;
 use Models\UserModel;
 
@@ -19,6 +20,11 @@ class StudioController
 					False
 				);
 			}
+
+			$pdo = Database::getConnection();
+			$postModel = new PostModel($pdo);
+
+			$images = $postModel->getLastUserPosts(6, $_SESSION['user_id']);
 
 			include __DIR__ . '/../Views/studio.php';
 		}
