@@ -103,6 +103,14 @@ function handleFileInputChange(e) {
 		return;
 	}
 
+	const allowedExtensions = ['jpg', 'jpeg', 'png', 'gif'];
+	const fileExtension = file.name.split('.').pop().toLowerCase();
+	if (!allowedExtensions.includes(fileExtension)) {
+		displayError('Invalid file type. Only JPG, JPEG, PNG, and GIF are allowed.');
+		e.target.value = '';
+		return;
+	}
+
 	if (file.size > MAX_SIZE) {
 		displayError('The file is too large (max 20 MB).');
 		e.target.value = '';

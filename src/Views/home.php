@@ -48,7 +48,7 @@
 									<button type="submit"><?= $post['liked'] ? "Unlike" : "Like" ?></button>
 								</form>
 								<form method="post" action="/comment?post_id=<?= htmlspecialchars($post['id'])?>">
-									<input type="text" name="content" required>
+									<input type="text" name="content" placeholder="Type your comment" required>
 									<button type="submit">Send</button>
 								</form>
 							<?php endif; ?>
@@ -57,7 +57,15 @@
 								<form method="post" action="/delete-post?post_id=<?= htmlspecialchars($post['id'])?>">
 									<button type="submit" class="delete-button">Delete Post</button>
 								</form>
+								<div class="share-buttons">
+									<p>Share on:</p>
+									<a href="https://twitter.com/intent/tweet?url=<?= $post['sn_url'] ?>&text=Check out this image!" target="_blank">Twitter</a>
+									<a href="https://www.reddit.com/submit?url=<?= $post['sn_url'] ?>&title=Check out this image!" target="_blank">Reddit</a>
+								</div>
 							<?php endif; ?>
+							<?php
+								
+							?>
 						</div>
 					<?php endforeach; ?>
 				<?php endif; ?>

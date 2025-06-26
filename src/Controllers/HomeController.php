@@ -37,6 +37,7 @@ class HomeController
 				$post['like_count'] = $likesByPostId[$post['id']] ?? 0;
 				$post['comments'] = $commentsByPostId[$post['id']] ?? [];
 				$post['liked'] = $current_user_id ? !empty($postModel->findLikePost($post['id'], $current_user_id)) : false;
+				$post['sn_url'] = urlencode("http://{$_SERVER['HTTP_HOST']}/uploads/{$post['image_path']}");
 			}
 			unset($post);
 

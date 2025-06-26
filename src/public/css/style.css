@@ -19,21 +19,29 @@ body {
 .comments-container {
 	border: 3px solid black;
 	padding: 20px;
-	margin-bottom: 50px;
+	margin-bottom: 16px;
 }
 
 #upload-container {
 	margin-bottom: 20px;
 }
 
+.post form {
+	margin-bottom: 20px;
+}
+
+.delete-button {
+	color: red;
+}
+
 #studio-container {
 	display: flex;
-	gap: 24px;
+	gap: 16px;
 }
 
 #galleries-container {
 	border: 3px solid black;
-	padding: 20px;
+	padding: 16px;
 	display: flex;
 	align-items: center;
 	flex-direction: column;
@@ -47,7 +55,7 @@ body {
 
 #edit-container {
 	border: 3px solid black;
-	padding: 20px;
+	padding: 16px;
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
@@ -55,7 +63,7 @@ body {
 }
 
 #stickers-container {
-	padding-left: 20px;
+	padding-left: 16px;
 	display: flex;
 	align-items: center;
 	flex-direction: column;
@@ -66,7 +74,7 @@ body {
 	max-height: 100px;
 	width: auto;
 	height: auto;
-	margin-bottom: 20px;
+	margin-bottom: 16px;
 }
 
 #preview-container {
@@ -76,6 +84,13 @@ body {
 }
 
 #image-container {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	margin: 16px;
+}
+
+#post-container {
 	display: flex;
 	justify-content: center;
 	align-items: center;
@@ -145,13 +160,13 @@ body {
 		max-height: 200px;
 		width: auto;
 		height: auto;
-		margin-bottom: 20px;
+		margin-bottom: 16px;
 	}
 
 	#stickers-container {
 		flex-direction: row;
 		justify-content: center;
-		margin-top: 20px;
+		margin-top: 16px;
 	}
 
 	#webcam-canvas {

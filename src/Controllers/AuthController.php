@@ -41,10 +41,12 @@ class AuthController
 				}
 
 				$_SESSION['user_id'] = $user['id'];
-				if ($username == "test")
-				{
-					$_SESSION['role'] = "admin";
-				}
+
+				// if ($username == "test")
+				// {
+				// 	$_SESSION['role'] = "admin";
+				// }
+
 				$_SESSION['success'] = "Login successful. Welcome back!";
 				header('Location: /home');
 				exit();

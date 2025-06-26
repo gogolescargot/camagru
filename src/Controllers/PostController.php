@@ -315,8 +315,13 @@ class PostController
 				);
 			}
 
+			$filePath = '/var/www/html/uploads/' . $post['image_path'];
+
 			$pdo->beginTransaction();
 			$postModel->deletePost($postId);
+			if (file_exists($filePath)) {
+				unlink($filePath);
+			}
 			$pdo->commit();
 			
 			$_SESSION['success'] = "Post deleted successfully!";

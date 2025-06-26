@@ -20,8 +20,10 @@
 							<input type="file" id="image" name="image" accept="image/*">
 							<button id="remove-image-button" style="display: none;">✖</button>
 						</div>
-						<input type="text" name="title" id="title">
-						<button id="post-button">Post</button>
+						<div id="post-container">
+							<input type="text" name="title" id="title" placeholder="Title of your post">
+							<button id="post-button">Post</button>
+						</div>
 						</form>
 					</div>
 					<div id="stickers-container">
