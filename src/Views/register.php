@@ -10,22 +10,25 @@
 	<body>
 		<?php include __DIR__ . '/partials/navbar.php'; ?>
 		<main>
-			<h1>Register</h1>
-			<form action="/register" method="POST">
-				<label for="username">Username:</label>
-				<input type="text" id="username" name="username" required>
+			<div class="auth-container">
+				<h1>Register</h1>
+				<form action="/register" method="POST" autocomplete="on">
+					<label for="username">Username</label>
+					<input type="text" id="username" name="username" required autofocus>
 
-				<label for="email">Email:</label>
-				<input type="email" id="email" name="email" required>
+					<label for="email">Email</label>
+					<input type="email" id="email" name="email" required>
 
-				<label for="password">Password:</label>
-				<input type="password" id="password" name="password" required>
+					<label for="password">Password</label>
+					<input type="password" id="password" name="password" required>
 
-				<label for="password">Confirm password:</label>
-				<input type="password" id="confirm-password" name="confirm-password" required>
+					<label for="confirm-password">Confirm Password</label>
+					<input type="password" id="confirm-password" name="confirm-password" required>
 
-				<button type="submit">Register</button>
-			</form>
+					<button type="submit">Register</button>
+				</form>
+				<a class="auth-link" href="/login">Already have an account? Login</a>
+			</div>
 		</main>
 	</body>
 </html>

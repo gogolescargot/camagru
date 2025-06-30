@@ -10,7 +10,6 @@
 	<body>
 		<?php include __DIR__ . '/partials/navbar.php'; ?>
 		<main>
-			<h1>Studio</h1>
 			<div id="studio-container">
 				<div id="edit-container">
 					<div id="preview-container">

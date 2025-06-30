@@ -10,13 +10,14 @@
 	<body>
 		<?php include __DIR__ . '/partials/navbar.php'; ?>
 		<main>
-			<h1>Forgot Password</h1>
-			<form action="/send-password-reset" method="POST">
-				<label for="email">Email:</label>
-				<input type="email" id="email" name="email" required>
-
-				<button type="submit">Send</button>
-			</form>
+			<div class="auth-container">
+				<h1 class="text-center">Forgot Password</h1>
+				<form action="/send-password-reset" method="POST">
+					<label for="email">Email:</label>
+					<input type="email" id="email" name="email" required>
+					<button type="submit">Send</button>
+				</form>
+			</div>
 		</main>
 	</body>
 </html>

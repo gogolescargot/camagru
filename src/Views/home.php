@@ -10,24 +10,25 @@
 	<body>
 		<?php include __DIR__ . '/partials/navbar.php'; ?>
 		<main>
-			<h1>Home</h1>
 			<div id="posts-container">
 				<?php if (empty($posts)): ?>
-					<p>No posts yet.</p>
+					<p class="info" style="text-align:center;">No posts yet.</p>
 				<?php else: ?>
 					<?php foreach ($posts as $post): ?>
 						<div class="post">
 							<p class="author"><?= htmlspecialchars($post['username'])?></p>
 							<img class="image" src="/uploads/<?= htmlspecialchars($post['image_path']) ?>" alt="<?= htmlspecialchars($post['title'] ?? '') ?>">
-							<p class="title"><?= htmlspecialchars($post['title']) ?></p>
+							<?php if (!empty($post['title'])): ?>
+								<p class="title"><?= htmlspecialchars($post['title']) ?></p>
+							<?php endif; ?>
 							<p class="date"><?= htmlspecialchars($post['created_at']) ?></p>
-							<p>Likes: <?= htmlspecialchars($post['like_count']) ?></p>
+							<p class="likes">Likes: <?= htmlspecialchars($post['like_count']) ?></p>
 							
-							<p>Comments:</p>
 							<div class="comments-container">
+								<p>Comments:</p>
 								<?php if (empty($post['comments'])): ?>
-									<p>No comments yet.</p>
-								<?else: ?>
+									<p class="info">No comments yet.</p>
+								<?php else: ?>
 									<?php foreach ($post['comments'] as $comment): ?>
 										<div class="comment">
 											<p class="author"><?= htmlspecialchars($comment['username'])?></p>
@@ -57,25 +58,17 @@
 								<form method="post" action="/delete-post?post_id=<?= htmlspecialchars($post['id'])?>">
 									<button type="submit" class="delete-button">Delete Post</button>
 								</form>
-								<div class="share-buttons">
-									<p>Share on:</p>
-									<a href="https://twitter.com/intent/tweet?url=<?= $post['sn_url'] ?>&text=Check out this image!" target="_blank">Twitter</a>
-									<a href="https://www.reddit.com/submit?url=<?= $post['sn_url'] ?>&title=Check out this image!" target="_blank">Reddit</a>
-								</div>
 							<?php endif; ?>
-							<?php
-								
-							?>
 						</div>
 					<?php endforeach; ?>
 				<?php endif; ?>
 			</div>
 			<div class="pagination">
 				<?php if ($page > 1): ?>
-					<a href="/home?page=<?= max(1, $page - 1) ?>">Previous</a>
+					<a href="/home?page=<?= max(1, $page - 1) ?>" class="auth-link">Previous</a>
 				<?php endif; ?>
 				<?php if (count($posts) == $limit):?>
-					<a href="/home?page=<?= $page + 1 ?>">Next</a>
+					<a href="/home?page=<?= $page + 1 ?>" class="auth-link">Next</a>
 				<?php endif; ?>
 			</div>
 		</main>

@@ -1,194 +1,548 @@
+:root {
+	--bg-dark: hsl(228 79% 2%);
+	--bg: hsl(222 55% 5%);
+	--bg-light: hsl(220 35% 10%);
+	--text: hsl(220 100% 98%);
+	--text-muted: hsl(220 35% 73%);
+	--highlight: hsl(220 20% 42%);
+	--border: hsl(220 26% 31%);
+	--border-muted: hsl(220 37% 20%);
+	--primary: hsl(220 78% 76%);
+	--secondary: hsl(40 53% 60%);
+	--danger: hsl(9 26% 64%);
+	--warning: hsl(52 19% 57%);
+	--success: hsl(146 17% 59%);
+	--info: hsl(217 28% 65%);
+}
+
 body {
 	font-family: monospace;
 	font-size: large;
+	background: var(--bg);
+	color: var(--text);
+}
+
+.text-center { text-align: center; }
+.color-success { color: var(--success); }
+.color-danger { color: var(--danger); }
+.color-primary { color: var(--primary); }
+.color-info { color: var(--info); }
+.mt-16 { margin-top: 16px; }
+.mt-32 { margin-top: 32px; }
+.mb-24 { margin-bottom: 24px; }
+
+.auth-container {
+	max-width: 400px;
+	margin: 40px auto;
+	padding: 32px 24px;
+	background: var(--bg-light);
+	border: 3px solid var(--border);
+	border-radius: 12px;
+	box-shadow: 0 4px 24px 0 rgba(0,0,0,0.15);
+	display: flex;
+	flex-direction: column;
+	gap: 16px;
+}
+.auth-container h1 {
+	text-align: center;
+	color: var(--primary);
+	margin: 8px 0 8px 0;
+}
+.auth-container label {
+	color: var(--text-muted);
+	margin-bottom: 4px;
+}
+.auth-container input {
+	width: 100%;
+	display: block;
+	padding: 8px 10px;
+	border: 2px solid var(--border-muted);
+	border-radius: 6px;
+	background: var(--bg-dark);
+	color: var(--text);
+	margin-bottom: 12px;
+	box-sizing: border-box;
+}
+.auth-container button {
+	width: 100%;
+	padding: 10px 0;
+	margin: 10px 0 0 0;
+	background: var(--primary);
+	color: var(--bg-dark);
+	border: none;
+	border-radius: 6px;
+	font-weight: bold;
+	font-size: 1.1rem;
+	font-family: monospace;
+	cursor: pointer;
+	transition: background 0.2s;
+}
+.auth-container button:hover {
+	background: var(--secondary);
+}
+.auth-container .auth-link {
+	display: block;
+	text-align: center;
+	margin-top: 8px;
+	color: var(--info);
+	text-decoration: none;
+	font-size: 0.95rem;
+}
+.auth-container .auth-link:hover {
+	text-decoration: underline;
 }
 
 .post {
-	border: 3px solid black;
-	padding: 20px;
+	border: 3px solid var(--border);
+	background: var(--bg-light);
+	border-radius: 12px;
+	box-shadow: 0 4px 24px 0 rgba(0,0,0,0.10);
+	padding: 32px 24px;
 	margin-bottom: 50px;
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
 }
-
+.post .author {
+	font-weight: bold;
+	color: var(--primary);
+	margin-bottom: 0;
+}
 .post .image {
-	max-width: 250px;
-	max-height: 250px;
+	max-width: 400px;
+	max-height: 400px;
 	width: auto;
 	height: auto;
+	border: 2px solid var(--border-muted);
+	background: var(--bg-dark);
+	margin: 0 auto 12px auto;
+	display: block;
+}
+.post .title {
+	color: var(--primary);
+	font-weight: bold;
+	text-align: center;
+}
+.post .date {
+	color: var(--text-muted);
+	font-size: 0.95rem;
+	text-align: center;
+}
+.post .likes {
+	color: var(--success);
+	font-weight: bold;
+	text-align: center;
+}
+.post form button {
+	width: auto;
+	min-width: 80px;
+	padding: 8px 18px;
+	margin: 0;
+	background: var(--primary);
+	color: var(--bg-dark);
+	border: none;
+	border-radius: 6px;
+	font-weight: bold;
+	font-size: 1rem;
+	font-family: monospace;
+	cursor: pointer;
+	transition: background 0.2s;
+	display: inline-block;
+	align-self: stretch;
+}
+.post form button:hover {
+	background: var(--secondary);
+}
+.post form[action^="/comment"] {
+	display: flex;
+	gap: 8px;
+	margin-top: 8px;
+	align-items: center;
+}
+.post form[action^="/comment"] input[type="text"] {
+	flex: 1 1 auto;
+	padding: 8px 10px;
+	border: 2px solid var(--border-muted);
+	border-radius: 6px;
+	background: var(--bg-dark);
+	color: var(--text);
+	font-size: 1rem;
+	font-family: monospace;
+	box-sizing: border-box;
 }
 
 .comments-container {
-	border: 3px solid black;
+	border: 3px solid var(--border);
+	background: var(--bg-light);
+	border-radius: 8px;
 	padding: 20px;
-	margin-bottom: 16px;
+	color: var(--text);
+	margin-top: 8px;
 }
-
-#upload-container {
-	margin-bottom: 20px;
+.comments-container > p {
+	color: var(--highlight);
+	margin: 8px 0;
 }
-
-.post form {
-	margin-bottom: 20px;
+.comment .author {
+	color: var(--primary);
+	font-weight: bold;
+	margin-bottom: 2px;
+}
+.comment .content {
+	margin-bottom: 2px;
+}
+.comment .date {
+	text-align: start;
+	color: var(--text-muted);
+	font-size: 0.9rem;
 }
 
 .delete-button {
-	color: red;
+	background: transparent !important;
+	color: var(--danger) !important;
+	border: 1px solid var(--danger) !important;
+	transition: background 0.2s, color 0.2s;
+}
+.delete-button:hover {
+	background: var(--danger) !important;
+	color: var(--bg-dark) !important;
 }
 
+.pagination {
+	text-align: center;
+	margin: 32px 0;
+}
+.pagination .auth-link,
+.pagination a {
+	color: var(--info);
+	text-decoration: none;
+	font-size: 1rem;
+	margin: 0 8px;
+	transition: color 0.2s;
+}
+.pagination .auth-link:hover,
+.pagination a:hover {
+	text-decoration: underline;
+	color: var(--primary);
+}
+
+#upload-container { margin-bottom: 20px; }
 #studio-container {
 	display: flex;
 	gap: 16px;
+	margin: auto;
+	max-width: 1200px;
 }
-
 #galleries-container {
-	border: 3px solid black;
+	border: 3px solid var(--border);
+	border-radius: 12px;
 	padding: 16px;
 	display: flex;
 	align-items: center;
 	flex-direction: column;
+	background: var(--bg-light);
 }
-
 #webcam {
 	max-width: 500px;
 	max-height: 500px;
-	border: 2px solid black;
+	border: 2px solid var(--border);
+	background: var(--bg-dark);
 }
-
 #edit-container {
-	border: 3px solid black;
-	padding: 16px;
+	border: 3px solid var(--border);
+	border-radius: 12px;
+	padding: 24px;
 	display: flex;
 	justify-content: space-between;
-	align-items: center;
+	align-items: flex-start;
 	flex-grow: 1;
+	background: var(--bg-light);
+	box-shadow: 0 4px 24px 0 rgba(0,0,0,0.08);
+	gap: 24px;
 }
-
 #stickers-container {
 	padding-left: 16px;
 	display: flex;
-	align-items: center;
 	flex-direction: column;
+	align-items: center;
+	gap: 16px;
+	background: var(--bg-light);
 }
-
 .gallery .image {
 	max-width: 100px;
 	max-height: 100px;
 	width: auto;
 	height: auto;
 	margin-bottom: 16px;
+	border: 2px solid var(--border-muted);
+	background: var(--bg-dark);
+	border-radius: 8px;
 }
-
 #preview-container {
 	display: flex;
 	flex-direction: column;
 	align-items: center;
+	gap: 16px;
 }
-
 #image-container {
 	display: flex;
-	justify-content: center;
 	align-items: center;
-	margin: 16px;
+	gap: 8px;
+	margin: 16px 0;
 }
-
+#image-container label {
+	color: var(--text-muted);
+	margin-right: 8px;
+}
+#image-container input[type="file"] {
+	color: var(--text);
+	background: var(--bg-dark);
+	border: 1px solid var(--border-muted);
+	border-radius: 6px;
+	padding: 6px 8px;
+	font-family: monospace;
+	font-size: 1rem;
+}
+#remove-image-button {
+	background: var(--danger);
+	color: var(--bg-dark);
+	border: none;
+	border-radius: 6px;
+	padding: 6px 10px;
+	font-size: 1.1rem;
+	cursor: pointer;
+	transition: background 0.2s;
+}
+#remove-image-button:hover {
+	background: var(--border);
+}
 #post-container {
 	display: flex;
 	justify-content: center;
 	align-items: center;
+	gap: 8px;
+	margin-top: 8px;
 }
-
-#stickers-container {
-	display: flex;
-	flex-direction: column;
-	align-items: center;
+#post-container input[type="text"] {
+	flex: 1 1 auto;
+	padding: 8px 10px;
+	border: 2px solid var(--border-muted);
+	border-radius: 6px;
+	background: var(--bg-dark);
+	color: var(--text);
+	font-size: 1rem;
+	font-family: monospace;
+	box-sizing: border-box;
 }
-
-.sticker {
-	max-width: 150px;
-	max-height: 150px;
-}
-
-#webcam-canvas {
+#post-button {
+	width: auto;
+	min-width: 80px;
+	padding: 8px 18px;
+	background: var(--primary);
+	color: var(--bg-dark);
 	border: none;
-	display: block;
-}
-
-.author {
+	border-radius: 6px;
 	font-weight: bold;
+	font-size: 1rem;
+	font-family: monospace;
+	cursor: pointer;
+	transition: background 0.2s;
+}
+#post-button:hover {
+	background: var(--secondary);
+}
+.sticker {
+	max-width: 100px;
+	max-height: 100px;
+	border: 2px solid var(--primary);
+	background: var(--bg-light);
+	border-radius: 8px;
+	cursor: grab;
+	transition: border 0.2s;
+}
+.sticker:active {
+	cursor: grabbing;
+	border: 2px solid var(--secondary);
 }
 
-.success {
-	color: green;
-}
+.success { color: var(--success); }
+.info { color: var(--info); }
+.error { color: var(--danger); }
 
-.info {
-	color: blue;
-}
-
-.error {
-	color: red;
-}
-
-#studio-error {
-	display: none;
-	color: red;
-	text-align: center;
-}
-
-#studio-success {
-	display: none;
-	color: green;
-	text-align: center;
-}
-
+#studio-success,
+#studio-error,
 #input-error {
 	display: none;
-	color: red;
+	text-align: center;
+	margin-top: 16px;
+}
+#studio-success { color: var(--success); }
+#studio-error,
+#input-error { color: var(--danger); }
+
+
+#posts-container {
+	max-width: 700px;
+	margin: 0 auto;
+}
+.settings-container {
+	max-width: 500px;
+	margin: auto;
+	padding: 32px 24px;
+	background: var(--bg-light);
+	border: 3px solid var(--border);
+	border-radius: 12px;
+	box-shadow: 0 4px 24px 0 rgba(0,0,0,0.15);
+	display: flex;
+	flex-direction: column;
+	gap: 32px;
+}
+.settings-container h3 {
+	font-size: 22px;
+	color: var(--secondary);
+	margin-bottom: 12px;
+}
+.settings-container form {
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+	margin-bottom: 16px;
+	background: var(--bg);
+	padding: 18px 16px;
+	border-radius: 8px;
+	border: 1.5px solid var(--border-muted);
+	box-shadow: 0 2px 8px 0 rgba(0,0,0,0.07);
+}
+.settings-container label {
+	color: var(--text-muted);
+	margin-bottom: 4px;
+	font-size: 1rem;
+}
+.settings-container input[type="text"],
+.settings-container input[type="email"],
+.settings-container input[type="password"] {
+	width: 100%;
+	display: block;
+	padding: 8px 10px;
+	border: 2px solid var(--border-muted);
+	border-radius: 6px;
+	background: var(--bg-dark);
+	color: var(--text);
+	margin-bottom: 8px;
+	font-size: 1rem;
+	font-family: monospace;
+	box-sizing: border-box;
+}
+.settings-container input[type="checkbox"] {
+	accent-color: var(--primary);
+	margin-right: 8px;
+}
+.settings-container button {
+	width: 100%;
+	padding: 10px 0;
+	margin: 10px 0 0 0;
+	background: var(--primary);
+	color: var(--bg-dark);
+	border: none;
+	border-radius: 6px;
+	font-weight: bold;
+	font-size: 1.1rem;
+	font-family: monospace;
+	cursor: pointer;
+	transition: background 0.2s;
+}
+.settings-container button:hover {
+	background: var(--secondary);
+}
+
+header {
+	background: var(--bg-light);
+	box-shadow: 0 2px 12px 0 rgba(0,0,0,0.10);
+	padding: 0;
+	margin-bottom: 32px;
+}
+nav {
+	max-width: 900px;
+	margin: 0 auto;
+	padding: 0 24px;
+}
+nav ul {
+	display: flex;
+	justify-content: flex-start;
+	align-items: center;
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	gap: 24px;
+}
+nav ul li {
+	margin: 0;
+}
+nav ul li a {
+	display: block;
+	padding: 18px 0 16px 0;
+	color: var(--primary);
+	font-weight: bold;
+	text-decoration: none;
+	font-size: 1.1rem;
+	transition: color 0.2s;
+	border-bottom: 2px solid transparent;
+}
+nav ul li a:hover,
+nav ul li a.active {
+	color: var(--secondary);
+	border-bottom: 2px solid var(--secondary);
+}
+
+.banner {
+	width: 100%;
+	padding: 14px 0;
+	text-align: center;
+	font-weight: bold;
+	font-size: 1.05rem;
+	letter-spacing: 0.5px;
+	margin: 0;
+}
+.banner.success {
+	background: var(--success);
+	color: var(--bg-dark);
+}
+.banner.info {
+	background: var(--info);
+	color: var(--bg-dark);
+}
+.banner.error {
+	background: var(--danger);
+	color: var(--bg-dark);
 }
 
 @media (max-width: 1100px) {
-
 	#studio-container {
 		flex-direction: column;
+		padding: 12px;
 	}
-
 	#edit-container {
 		flex-direction: column;
+		padding: 12px;
 	}
-	
-	.gallery .image {
-		max-width: 200px;
-		max-height: 200px;
-		width: auto;
-		height: auto;
-		margin-bottom: 16px;
-	}
-
 	#stickers-container {
 		flex-direction: row;
 		justify-content: center;
 		margin-top: 16px;
+		padding-left: 0;
 	}
-
-	#webcam-canvas {
-		max-width: 100%;
-		height: auto;
-	}
-
 }
-
-@media (max-width: 600px) {
-
+@media (max-width: 800px) {
 	#edit-container {
 		flex-direction: column;
+		padding: 8px;
 	}
-
 	#webcam-canvas {
 		max-width: 100%;
 		height: auto;
 	}
-
 	.sticker {
-		max-width: 100px;
-		max-height: 100px;
+		max-width: 60px;
+		max-height: 60px;
 	}
 }
