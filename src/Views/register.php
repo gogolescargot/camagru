@@ -30,5 +30,6 @@
 				<a class="auth-link" href="/login">Already have an account? Login</a>
 			</div>
 		</main>
+		<?php include __DIR__ . '/partials/footer.php'; ?>
 	</body>
 </html>

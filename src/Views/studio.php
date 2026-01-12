@@ -47,6 +47,7 @@
 			<p id="studio-error"></p>
 			<p id="studio-success"></p>
 		</main>
+		<?php include __DIR__ . '/partials/footer.php'; ?>
 	</body>
 	<script type="module" src="/js/studio.js"></script>
 </html>

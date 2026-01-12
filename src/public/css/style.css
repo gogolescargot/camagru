@@ -15,11 +15,21 @@
 	--info: hsl(217 28% 65%);
 }
 
+html, body {
+	height: 100%;
+	margin: 0;
+}
 body {
 	font-family: monospace;
 	font-size: large;
 	background: var(--bg);
 	color: var(--text);
+	display: flex;
+	flex-direction: column;
+	min-height: 100vh;
+}
+main {
+	flex: 1;
 }
 
 .text-center { text-align: center; }
@@ -492,6 +502,32 @@ nav ul li a:hover,
 nav ul li a.active {
 	color: var(--secondary);
 	border-bottom: 2px solid var(--secondary);
+}
+
+footer {
+	background: var(--bg-light);
+	box-shadow: 0 2px 12px 0 rgba(0,0,0,0.10);
+	padding: 12px 24px;
+	margin: auto;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	gap: 24px;
+	border-radius: 12px 12px 0 0;
+}
+footer p{
+	margin: 0;
+	color: var(--primary);
+	font-weight: bold;
+}
+footer a{
+	color: var(--primary);
+	font-weight: bold;
+	text-decoration: none;
+	transition: color 0.2s;
+}
+footer a:hover{
+	color: var(--secondary);
 }
 
 .banner {

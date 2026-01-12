@@ -25,5 +25,6 @@
 				<a class="auth-link" href="/register">Don't have an account? Register</a>
 			</div>
 		</main>
+		<?php include __DIR__ . '/partials/footer.php'; ?>
 	</body>
 </html>
