@@ -8,8 +8,7 @@ services:
       - ./uploads:/var/www/uploads
       - ./php.ini:/usr/local/etc/php/php.ini
     command: >
-      sh -c "chmod +w /var/www/uploads &&
-      apt-get update &&
+      sh -c "apt-get update &&
       apt-get install -y msmtp &&
       docker-php-ext-install pdo_mysql &&
       php-fpm"
