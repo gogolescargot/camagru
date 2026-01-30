@@ -5,10 +5,10 @@ services:
     env_file: .env
     volumes:
       - ./src:/var/www/html
-      - ./uploads:/var/www/html/uploads
+      - ./uploads:/var/www/uploads
       - ./php.ini:/usr/local/etc/php/php.ini
     command: >
-      sh -c "chmod +w /var/www/html/uploads &&
+      sh -c "chmod +w /var/www/uploads &&
       apt-get update &&
       apt-get install -y msmtp &&
       docker-php-ext-install pdo_mysql &&
@@ -21,7 +21,7 @@ services:
       - "8080:80"
     volumes:
       - ./src/public:/var/www/html
-      - ./uploads:/var/www/html/uploads
+      - ./uploads:/var/www/uploads
       - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
     depends_on:
       - php

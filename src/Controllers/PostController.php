@@ -230,7 +230,7 @@ class PostController
 				);
 			}
 
-			$uploadDir = '/var/www/html/uploads/';
+			$uploadDir = '/var/www/uploads/';
 			$uploadName = uniqid() . '.' . $fileExtension;
 			$destPath = $uploadDir . $uploadName;
 
@@ -315,7 +315,7 @@ class PostController
 				);
 			}
 
-			$filePath = '/var/www/html/uploads/' . $post['image_path'];
+			$filePath = '/var/www/uploads/' . $post['image_path'];
 
 			$pdo->beginTransaction();
 			$postModel->deletePost($postId);
