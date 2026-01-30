@@ -15,10 +15,12 @@
 	--info: hsl(217 28% 65%);
 }
 
-html, body {
+html,
+body {
 	height: 100%;
 	margin: 0;
 }
+
 body {
 	font-family: monospace;
 	font-size: large;
@@ -28,18 +30,42 @@ body {
 	flex-direction: column;
 	min-height: 100vh;
 }
+
 main {
 	flex: 1;
 }
 
-.text-center { text-align: center; }
-.color-success { color: var(--success); }
-.color-danger { color: var(--danger); }
-.color-primary { color: var(--primary); }
-.color-info { color: var(--info); }
-.mt-16 { margin-top: 16px; }
-.mt-32 { margin-top: 32px; }
-.mb-24 { margin-bottom: 24px; }
+.text-center {
+	text-align: center;
+}
+
+.color-success {
+	color: var(--success);
+}
+
+.color-danger {
+	color: var(--danger);
+}
+
+.color-primary {
+	color: var(--primary);
+}
+
+.color-info {
+	color: var(--info);
+}
+
+.mt-16 {
+	margin-top: 16px;
+}
+
+.mt-32 {
+	margin-top: 32px;
+}
+
+.mb-24 {
+	margin-bottom: 24px;
+}
 
 .auth-container {
 	max-width: 400px;
@@ -48,20 +74,23 @@ main {
 	background: var(--bg-light);
 	border: 3px solid var(--border);
 	border-radius: 12px;
-	box-shadow: 0 4px 24px 0 rgba(0,0,0,0.15);
+	box-shadow: 0 4px 24px 0 rgba(0, 0, 0, 0.15);
 	display: flex;
 	flex-direction: column;
 	gap: 16px;
 }
+
 .auth-container h1 {
 	text-align: center;
 	color: var(--primary);
 	margin: 8px 0 8px 0;
 }
+
 .auth-container label {
 	color: var(--text-muted);
 	margin-bottom: 4px;
 }
+
 .auth-container input {
 	width: 100%;
 	display: block;
@@ -73,6 +102,7 @@ main {
 	margin-bottom: 12px;
 	box-sizing: border-box;
 }
+
 .auth-container button {
 	width: 100%;
 	padding: 10px 0;
@@ -87,9 +117,11 @@ main {
 	cursor: pointer;
 	transition: background 0.2s;
 }
+
 .auth-container button:hover {
 	background: var(--secondary);
 }
+
 .auth-container .auth-link {
 	display: block;
 	text-align: center;
@@ -98,6 +130,7 @@ main {
 	text-decoration: none;
 	font-size: 0.95rem;
 }
+
 .auth-container .auth-link:hover {
 	text-decoration: underline;
 }
@@ -106,18 +139,20 @@ main {
 	border: 3px solid var(--border);
 	background: var(--bg-light);
 	border-radius: 12px;
-	box-shadow: 0 4px 24px 0 rgba(0,0,0,0.10);
+	box-shadow: 0 4px 24px 0 rgba(0, 0, 0, 0.10);
 	padding: 32px 24px;
 	margin-bottom: 50px;
 	display: flex;
 	flex-direction: column;
 	gap: 12px;
 }
+
 .post .author {
 	font-weight: bold;
 	color: var(--primary);
 	margin-bottom: 0;
 }
+
 .post .image {
 	max-width: 400px;
 	max-height: 400px;
@@ -128,21 +163,25 @@ main {
 	margin: 0 auto 12px auto;
 	display: block;
 }
+
 .post .title {
 	color: var(--primary);
 	font-weight: bold;
 	text-align: center;
 }
+
 .post .date {
 	color: var(--text-muted);
 	font-size: 0.95rem;
 	text-align: center;
 }
+
 .post .likes {
 	color: var(--success);
 	font-weight: bold;
 	text-align: center;
 }
+
 .post form button {
 	width: auto;
 	min-width: 80px;
@@ -160,15 +199,18 @@ main {
 	display: inline-block;
 	align-self: stretch;
 }
+
 .post form button:hover {
 	background: var(--secondary);
 }
+
 .post form[action^="/comment"] {
 	display: flex;
 	gap: 8px;
 	margin-top: 8px;
 	align-items: center;
 }
+
 .post form[action^="/comment"] input[type="text"] {
 	flex: 1 1 auto;
 	padding: 8px 10px;
@@ -189,18 +231,22 @@ main {
 	color: var(--text);
 	margin-top: 8px;
 }
-.comments-container > p {
+
+.comments-container>p {
 	color: var(--highlight);
 	margin: 8px 0;
 }
+
 .comment .author {
 	color: var(--primary);
 	font-weight: bold;
 	margin-bottom: 2px;
 }
+
 .comment .content {
 	margin-bottom: 2px;
 }
+
 .comment .date {
 	text-align: start;
 	color: var(--text-muted);
@@ -213,6 +259,7 @@ main {
 	border: 1px solid var(--danger) !important;
 	transition: background 0.2s, color 0.2s;
 }
+
 .delete-button:hover {
 	background: var(--danger) !important;
 	color: var(--bg-dark) !important;
@@ -222,6 +269,7 @@ main {
 	text-align: center;
 	margin: 32px 0;
 }
+
 .pagination .auth-link,
 .pagination a {
 	color: var(--info);
@@ -230,19 +278,24 @@ main {
 	margin: 0 8px;
 	transition: color 0.2s;
 }
+
 .pagination .auth-link:hover,
 .pagination a:hover {
 	text-decoration: underline;
 	color: var(--primary);
 }
 
-#upload-container { margin-bottom: 20px; }
+#upload-container {
+	margin-bottom: 20px;
+}
+
 #studio-container {
 	display: flex;
 	gap: 16px;
 	margin: auto;
 	max-width: 1200px;
 }
+
 #galleries-container {
 	border: 3px solid var(--border);
 	border-radius: 12px;
@@ -252,12 +305,14 @@ main {
 	flex-direction: column;
 	background: var(--bg-light);
 }
+
 #webcam {
 	max-width: 500px;
 	max-height: 500px;
 	border: 2px solid var(--border);
 	background: var(--bg-dark);
 }
+
 #edit-container {
 	border: 3px solid var(--border);
 	border-radius: 12px;
@@ -267,9 +322,10 @@ main {
 	align-items: flex-start;
 	flex-grow: 1;
 	background: var(--bg-light);
-	box-shadow: 0 4px 24px 0 rgba(0,0,0,0.08);
+	box-shadow: 0 4px 24px 0 rgba(0, 0, 0, 0.08);
 	gap: 24px;
 }
+
 #stickers-container {
 	padding-left: 16px;
 	display: flex;
@@ -278,6 +334,7 @@ main {
 	gap: 16px;
 	background: var(--bg-light);
 }
+
 .gallery .image {
 	max-width: 100px;
 	max-height: 100px;
@@ -288,22 +345,26 @@ main {
 	background: var(--bg-dark);
 	border-radius: 8px;
 }
+
 #preview-container {
 	display: flex;
 	flex-direction: column;
 	align-items: center;
 	gap: 16px;
 }
+
 #image-container {
 	display: flex;
 	align-items: center;
 	gap: 8px;
 	margin: 16px 0;
 }
+
 #image-container label {
 	color: var(--text-muted);
 	margin-right: 8px;
 }
+
 #image-container input[type="file"] {
 	color: var(--text);
 	background: var(--bg-dark);
@@ -313,6 +374,7 @@ main {
 	font-family: monospace;
 	font-size: 1rem;
 }
+
 #remove-image-button {
 	background: var(--danger);
 	color: var(--bg-dark);
@@ -323,9 +385,11 @@ main {
 	cursor: pointer;
 	transition: background 0.2s;
 }
+
 #remove-image-button:hover {
 	background: var(--border);
 }
+
 #post-container {
 	display: flex;
 	justify-content: center;
@@ -333,6 +397,7 @@ main {
 	gap: 8px;
 	margin-top: 8px;
 }
+
 #post-container input[type="text"] {
 	flex: 1 1 auto;
 	padding: 8px 10px;
@@ -344,6 +409,7 @@ main {
 	font-family: monospace;
 	box-sizing: border-box;
 }
+
 #post-button {
 	width: auto;
 	min-width: 80px;
@@ -358,9 +424,17 @@ main {
 	cursor: pointer;
 	transition: background 0.2s;
 }
+
 #post-button:hover {
 	background: var(--secondary);
 }
+
+#post-button:disabled {
+	background: var(--border-muted);
+	color: var(--text-muted);
+	cursor: not-allowed;
+}
+
 .sticker {
 	max-width: 100px;
 	max-height: 100px;
@@ -370,14 +444,23 @@ main {
 	cursor: grab;
 	transition: border 0.2s;
 }
+
 .sticker:active {
 	cursor: grabbing;
 	border: 2px solid var(--secondary);
 }
 
-.success { color: var(--success); }
-.info { color: var(--info); }
-.error { color: var(--danger); }
+.success {
+	color: var(--success);
+}
+
+.info {
+	color: var(--info);
+}
+
+.error {
+	color: var(--danger);
+}
 
 #studio-success,
 #studio-error,
@@ -386,15 +469,22 @@ main {
 	text-align: center;
 	margin-top: 16px;
 }
-#studio-success { color: var(--success); }
+
+#studio-success {
+	color: var(--success);
+}
+
 #studio-error,
-#input-error { color: var(--danger); }
+#input-error {
+	color: var(--danger);
+}
 
 
 #posts-container {
 	max-width: 700px;
 	margin: 0 auto;
 }
+
 .settings-container {
 	max-width: 500px;
 	margin: auto;
@@ -402,16 +492,18 @@ main {
 	background: var(--bg-light);
 	border: 3px solid var(--border);
 	border-radius: 12px;
-	box-shadow: 0 4px 24px 0 rgba(0,0,0,0.15);
+	box-shadow: 0 4px 24px 0 rgba(0, 0, 0, 0.15);
 	display: flex;
 	flex-direction: column;
 	gap: 32px;
 }
+
 .settings-container h3 {
 	font-size: 22px;
 	color: var(--secondary);
 	margin-bottom: 12px;
 }
+
 .settings-container form {
 	display: flex;
 	flex-direction: column;
@@ -421,13 +513,15 @@ main {
 	padding: 18px 16px;
 	border-radius: 8px;
 	border: 1.5px solid var(--border-muted);
-	box-shadow: 0 2px 8px 0 rgba(0,0,0,0.07);
+	box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.07);
 }
+
 .settings-container label {
 	color: var(--text-muted);
 	margin-bottom: 4px;
 	font-size: 1rem;
 }
+
 .settings-container input[type="text"],
 .settings-container input[type="email"],
 .settings-container input[type="password"] {
@@ -443,10 +537,12 @@ main {
 	font-family: monospace;
 	box-sizing: border-box;
 }
+
 .settings-container input[type="checkbox"] {
 	accent-color: var(--primary);
 	margin-right: 8px;
 }
+
 .settings-container button {
 	width: 100%;
 	padding: 10px 0;
@@ -461,21 +557,24 @@ main {
 	cursor: pointer;
 	transition: background 0.2s;
 }
+
 .settings-container button:hover {
 	background: var(--secondary);
 }
 
 header {
 	background: var(--bg-light);
-	box-shadow: 0 2px 12px 0 rgba(0,0,0,0.10);
+	box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.10);
 	padding: 0;
 	margin-bottom: 32px;
 }
+
 nav {
 	max-width: 900px;
 	margin: 0 auto;
 	padding: 0 24px;
 }
+
 nav ul {
 	display: flex;
 	justify-content: flex-start;
@@ -485,9 +584,11 @@ nav ul {
 	padding: 0;
 	gap: 24px;
 }
+
 nav ul li {
 	margin: 0;
 }
+
 nav ul li a {
 	display: block;
 	padding: 18px 0 16px 0;
@@ -498,6 +599,7 @@ nav ul li a {
 	transition: color 0.2s;
 	border-bottom: 2px solid transparent;
 }
+
 nav ul li a:hover,
 nav ul li a.active {
 	color: var(--secondary);
@@ -506,7 +608,7 @@ nav ul li a.active {
 
 footer {
 	background: var(--bg-light);
-	box-shadow: 0 2px 12px 0 rgba(0,0,0,0.10);
+	box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.10);
 	padding: 12px 24px;
 	margin: auto;
 	display: flex;
@@ -515,18 +617,21 @@ footer {
 	gap: 24px;
 	border-radius: 12px 12px 0 0;
 }
-footer p{
+
+footer p {
 	margin: 0;
 	color: var(--primary);
 	font-weight: bold;
 }
-footer a{
+
+footer a {
 	color: var(--primary);
 	font-weight: bold;
 	text-decoration: none;
 	transition: color 0.2s;
 }
-footer a:hover{
+
+footer a:hover {
 	color: var(--secondary);
 }
 
@@ -539,14 +644,17 @@ footer a:hover{
 	letter-spacing: 0.5px;
 	margin: 0;
 }
+
 .banner.success {
 	background: var(--success);
 	color: var(--bg-dark);
 }
+
 .banner.info {
 	background: var(--info);
 	color: var(--bg-dark);
 }
+
 .banner.error {
 	background: var(--danger);
 	color: var(--bg-dark);
@@ -557,10 +665,12 @@ footer a:hover{
 		flex-direction: column;
 		padding: 12px;
 	}
+
 	#edit-container {
 		flex-direction: column;
 		padding: 12px;
 	}
+
 	#stickers-container {
 		flex-direction: row;
 		justify-content: center;
@@ -568,15 +678,18 @@ footer a:hover{
 		padding-left: 0;
 	}
 }
+
 @media (max-width: 800px) {
 	#edit-container {
 		flex-direction: column;
 		padding: 8px;
 	}
+
 	#webcam-canvas {
 		max-width: 100%;
 		height: auto;
 	}
+
 	.sticker {
 		max-width: 60px;
 		max-height: 60px;

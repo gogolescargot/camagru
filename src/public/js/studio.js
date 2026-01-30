@@ -18,6 +18,14 @@ let stickersOnCanvas = [];
 let draggedStickerSrc = null;
 let isUsingWebcam = true;
 
+function updatePostButtonState() {
+	if (!postButton) {
+		return;
+	}
+	postButton.disabled = stickersOnCanvas.length === 0;
+	postButton.title = stickersOnCanvas.length === 0 ? 'You need to add at least one sticker to post an image.' : '';
+}
+
 function displayError(message) {
 	if (studioError) {
 		studioError.style.display = 'block';
@@ -85,7 +93,7 @@ function handlePostButtonClick() {
 		.then((response) => response.json())
 		.then((data) => {
 			if (data.success) {
-		displaySuccess('Post created successfully!');
+				displaySuccess('Post created successfully!');
 				window.location.href = data.redirect;
 			} else {
 				displayError(data.message || 'An error occurred.');
@@ -118,6 +126,7 @@ function handleFileInputChange(e) {
 		studioError.style.display = 'none';
 		isUsingWebcam = false;
 		stickersOnCanvas = [];
+		updatePostButtonState(); // <-- garder désactivé tant qu'il n'y a pas de sticker
 		drawImage(file);
 		removeImageButton.style.display = 'block';
 	}
@@ -143,6 +152,7 @@ function handleCanvasDrop(e) {
 
 	stickersOnCanvas.push({ src: draggedStickerSrc, x, y });
 	drawStickers();
+	updatePostButtonState();
 }
 
 function handleRemoveImage() {
@@ -150,6 +160,7 @@ function handleRemoveImage() {
 	removeImageButton.style.display = 'none';
 	fileInput.value = '';
 	stickersOnCanvas = [];
+	updatePostButtonState();
 	initializeWebcam();
 }
 
@@ -227,3 +238,4 @@ webcamCanvas.addEventListener('dragover', handleCanvasDragOver);
 webcamCanvas.addEventListener('drop', handleCanvasDrop);
 
 initializeWebcam();
+updatePostButtonState();
