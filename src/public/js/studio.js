@@ -7,7 +7,6 @@ const studioSuccess = document.getElementById('studio-success');
 const webcamCanvas = document.getElementById('webcam-canvas');
 const postButton = document.getElementById('post-button');
 const fileInput = document.getElementById('image');
-const galleriesContainer = document.getElementById('galleries-container');
 const removeImageButton = document.getElementById('remove-image-button');
 
 let video = document.createElement('video');
@@ -126,7 +125,7 @@ function handleFileInputChange(e) {
 		studioError.style.display = 'none';
 		isUsingWebcam = false;
 		stickersOnCanvas = [];
-		updatePostButtonState(); // <-- garder désactivé tant qu'il n'y a pas de sticker
+		updatePostButtonState();
 		drawImage(file);
 		removeImageButton.style.display = 'block';
 	}

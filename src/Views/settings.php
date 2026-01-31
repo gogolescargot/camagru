@@ -14,7 +14,7 @@
 				<h3>Profile</h3>
 				<form action="/edit-username" method="POST">
 					<label for="username">Username:</label>
-					<input type="text" id="username" name="username" value="<?php echo htmlspecialchars($username); ?>" placeholder="Enter new username">
+					<input type="text" id="username" name="username" value="<?php echo htmlspecialchars($username); ?>" maxlength="20" placeholder="Enter new username">
 
 					<button type="submit">Submit</button>
 				</form>
@@ -27,11 +27,14 @@
 				</form>
 
 				<form action="/edit-password" method="POST">
-					<label for="password">Password:</label>
-					<input type="password" id="password" name="password" placeholder="Enter new password">
+					<label for="current-password">Current password:</label>
+					<input type="password" id="current-password" name="current-password" placeholder="Enter current password">
 
-					<label for="password">Confirm password:</label>
-					<input type="password" id="confirm-password" name="confirm-password" placeholder="Confirm new password">
+					<label for="new-password">New password:</label>
+					<input type="password" id="new-password" name="new-password" maxlength="255" placeholder="Enter new password">
+
+					<label for="confirm-new-password">Confirm new password:</label>
+					<input type="password" id="confirm-new-password" name="confirm-new-password" maxlength="255" placeholder="Confirm new password">
 
 					<button type="submit">Submit</button>
 				</form>

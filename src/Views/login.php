@@ -14,7 +14,7 @@
 				<h1>Login</h1>
 				<form action="/login" method="POST" autocomplete="on">
 					<label for="username">Username</label>
-					<input type="text" id="username" name="username" required autofocus>
+					<input type="text" id="username" name="username" maxlength="20" required autofocus>
 
 					<label for="password">Password</label>
 					<input type="password" id="password" name="password" required>

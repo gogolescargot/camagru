@@ -49,7 +49,7 @@
 									<button type="submit"><?= $post['liked'] ? "Unlike" : "Like" ?></button>
 								</form>
 								<form method="post" action="/comment?post_id=<?= htmlspecialchars($post['id'])?>">
-									<input type="text" name="content" placeholder="Type your comment" required>
+									<input type="text" name="content" placeholder="Type your comment" maxlength="500" required>
 									<button type="submit">Send</button>
 								</form>
 							<?php endif; ?>

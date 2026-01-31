@@ -12,6 +12,10 @@ class FormHelper
             $errors[] = "be at least 8 characters long";
         }
 
+        if (strlen($password) > 255) {
+            $errors[] = "not exceed 255 characters";
+        }
+
         if (!preg_match('/[A-Z]/', $password)) {
             $errors[] = "contain at least one uppercase letter";
         }

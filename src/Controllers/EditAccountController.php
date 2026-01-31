@@ -157,12 +157,22 @@ class EditAccountController
 			$userModel = new UserModel($pdo);
 			$user = $userModel->findById($_SESSION['user_id']);
 
-			$newPassword = isset($_POST['password']) ? trim($_POST['password']) : '';
-			$newConfirmPassword = isset($_POST['confirm-password']) ? trim($_POST['confirm-password']) : '';
+			$currentPassword = isset($_POST['current-password']) ? trim($_POST['current-password']) : '';
+			$newPassword = isset($_POST['new-password']) ? trim($_POST['new-password']) : '';
+			$newConfirmPassword = isset($_POST['confirm-new-password']) ? trim($_POST['confirm-new-password']) : '';
 
 			if ($newPassword !== $newConfirmPassword) {
 				ErrorHandler::handleError(
-					'Passwords do not match.',
+					'New passwords do not match.',
+					'/settings',
+					400,
+					False
+				);
+			}
+
+			if (!password_verify($currentPassword, $user['password'])) {
+				ErrorHandler::handleError(
+					'Current password is incorrect.',
 					'/settings',
 					400,
 					False

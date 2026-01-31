@@ -87,6 +87,15 @@ class PostController
 				);
 			}
 
+			if (strlen($content) > 500) {
+				ErrorHandler::handleError(
+					'Comment must not exceed 500 characters.',
+					'/home',
+					400,
+					False
+				);
+			}
+
 			$pdo = Database::getConnection();
 			$postModel = new PostModel($pdo);
 			$userModel = new UserModel($pdo);
@@ -201,45 +210,79 @@ class PostController
 
 			$title = isset($_POST['title']) ? trim($_POST['title']) : '';
 
-			if (!isset($_FILES['image-post']) || $_FILES['image-post']['error'] !== UPLOAD_ERR_OK) {
+			if (strlen($title) > 255) {
+				ErrorHandler::handleJsonResponse('Title must not exceed 255 characters.', False);
+			}
+
+			if (!isset($_FILES['image-post']) || !is_array($_FILES['image-post'])) {
+				ErrorHandler::handleJsonResponse('No file uploaded.', True);
+			}
+
+			$file = $_FILES['image-post'];
+			$error = $file['error'] ?? UPLOAD_ERR_NO_FILE;
+
+			if ($error !== UPLOAD_ERR_OK) {
 				ErrorHandler::handleJsonResponse(
-					ImageHelper::getUploadErrorMessage($_FILES['image-post']['error'] ?? null),
+					ImageHelper::getUploadErrorMessage($error),
 					True
 				);
 			}
 
-			$fileTmpPath = $_FILES['image-post']['tmp_name'];
-			$fileName = $_FILES['image-post']['name'];
-			$fileSize = $_FILES['image-post']['size'];
-			$fileType = $_FILES['image-post']['type'];
-			$fileExtension = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
-
-			$allowedExtensions = ['jpg', 'jpeg', 'png', 'gif'];
-			if (!in_array($fileExtension, $allowedExtensions)) {
-				ErrorHandler::handleJsonResponse(
-					'Invalid file type. Only JPG, JPEG, PNG, and GIF are allowed.',
-					False
-				);
+			$fileTmpPath = $file['tmp_name'] ?? '';
+			if ($fileTmpPath === '' || !is_uploaded_file($fileTmpPath)) {
+				ErrorHandler::handleJsonResponse('Invalid upload.', True);
 			}
 
+			$fileSize = (int)($file['size'] ?? 0);
 			$maxFileSize = 20 * 1024 * 1024;
-			if ($fileSize > $maxFileSize) {
+			if ($fileSize <= 0 || $fileSize > $maxFileSize) {
+				ErrorHandler::handleJsonResponse('File size exceeds the maximum limit of 20MB.', False);
+			}
+
+			$finfo = new \finfo(FILEINFO_MIME_TYPE);
+			$mimeType = $finfo->file($fileTmpPath);
+
+			$allowedMimes = [
+				'image/jpeg' => 'jpg',
+				'image/png'  => 'png',
+				'image/gif'  => 'gif',
+			];
+
+			if (!isset($allowedMimes[$mimeType])) {
 				ErrorHandler::handleJsonResponse(
-					'File size exceeds the maximum limit of 20MB.',
+					'Invalid file type. Only JPG, PNG, and GIF are allowed.',
 					False
 				);
 			}
 
-			$uploadDir = '/var/www/uploads/';
-			$uploadName = uniqid() . '.' . $fileExtension;
-			$destPath = $uploadDir . $uploadName;
+			$imageInfo = @getimagesize($fileTmpPath);
+			if ($imageInfo === false) {
+				ErrorHandler::handleJsonResponse('Invalid image file.', False);
+			}
 
+			$width = (int)($imageInfo[0] ?? 0);
+			$height = (int)($imageInfo[1] ?? 0);
+			$maxPixels = 25_000_000;
+
+			if ($width <= 0 || $height <= 0 || ($width * $height) > $maxPixels) {
+				ErrorHandler::handleJsonResponse('Image dimensions are too large.', False);
+			}
+
+			$uploadDir = '/var/www/uploads';
 			if (!is_dir($uploadDir) || !is_writable($uploadDir)) {
 				ErrorHandler::handleJsonResponse(
 					"Upload directory does not exist or is not writable: $uploadDir.",
 					True
 				);
 			}
+
+			$uploadDir = rtrim($uploadDir, '/') . '/';
+			$fileExtension = $allowedMimes[$mimeType];
+
+			do {
+				$uploadName = bin2hex(random_bytes(16)) . '.' . $fileExtension;
+				$destPath = $uploadDir . $uploadName;
+			} while (file_exists($destPath));
 
 			if (!move_uploaded_file($fileTmpPath, $destPath)) {
 				ErrorHandler::handleJsonResponse(
@@ -248,11 +291,11 @@ class PostController
 				);
 			}
 
-			$pdo = Database::getConnection(); 
+			$pdo = Database::getConnection();
 			$postModel = new PostModel($pdo);
 
 			$pdo->beginTransaction();
-			$postModel->createPost($_SESSION["user_id"], $title, $uploadName);
+			$postModel->createPost($_SESSION['user_id'], $title, $uploadName);
 			$pdo->commit();
 
 			$_SESSION['success'] = 'Post created successfully!';
@@ -265,6 +308,7 @@ class PostController
 			exit();
 		}
 		catch (\Exception $e) {
+			ErrorHandler::rollbackTransaction($pdo);
 			ErrorHandler::handleException($e);
 		}
 	}

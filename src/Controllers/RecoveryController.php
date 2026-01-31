@@ -66,8 +66,8 @@ class RecoveryController
 	{
 		try {
 			$token = isset($_POST['token']) ? trim($_POST['token']) : '';
-			$newPassword = isset($_POST['password']) ? trim($_POST['password']) : '';
-			$newConfirmPassword = isset($_POST['confirm-password']) ? trim($_POST['confirm-password']) : '';
+			$newPassword = isset($_POST['new-password']) ? trim($_POST['new-password']) : '';
+			$newConfirmPassword = isset($_POST['confirm-new-password']) ? trim($_POST['confirm-new-password']) : '';
 
 			if (empty($newPassword) || empty($newConfirmPassword)) {
 				ErrorHandler::handleError(

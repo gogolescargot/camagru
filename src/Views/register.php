@@ -14,16 +14,16 @@
 				<h1>Register</h1>
 				<form action="/register" method="POST" autocomplete="on">
 					<label for="username">Username</label>
-					<input type="text" id="username" name="username" required autofocus>
+					<input type="text" id="username" name="username" maxlength="20" required autofocus>
 
 					<label for="email">Email</label>
 					<input type="email" id="email" name="email" required>
 
 					<label for="password">Password</label>
-					<input type="password" id="password" name="password" required>
+					<input type="password" id="password" name="password" maxlength="255" required>
 
 					<label for="confirm-password">Confirm Password</label>
-					<input type="password" id="confirm-password" name="confirm-password" required>
+					<input type="password" id="confirm-password" name="confirm-password" maxlength="255" required>
 
 					<button type="submit">Register</button>
 				</form>

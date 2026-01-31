@@ -20,7 +20,7 @@
 							<button id="remove-image-button" style="display: none;">✖</button>
 						</div>
 						<div id="post-container">
-							<input type="text" name="title" id="title" placeholder="Title of your post">
+							<input type="text" name="title" id="title" maxlength="255" placeholder="Title of your post">
 							<button id="post-button">Post</button>
 						</div>
 						</form>
