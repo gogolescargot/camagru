@@ -39,6 +39,10 @@
 						<?php foreach ($images as $image): ?>
 							<div class="gallery">
 								<img class="image" src="/uploads/<?= htmlspecialchars($image['image_path']) ?>">
+								<form method="post" action="/delete-post?post_id=<?= htmlspecialchars($image['id'])?>&redirect=/studio">
+									<input type="hidden" name="image_id" value="<?= $image['id'] ?>">
+									<button class="delete-button">Delete</button>
+								</form>
 							</div>
 						<?php endforeach; ?>
 					<?php endif; ?>

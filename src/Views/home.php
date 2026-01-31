@@ -55,7 +55,7 @@
 							<?php endif; ?>
 
 							<?php if (isset($_SESSION['user_id']) && $_SESSION['user_id'] == $post['user_id']):?>
-								<form method="post" action="/delete-post?post_id=<?= htmlspecialchars($post['id'])?>">
+								<form method="post" action="/delete-post?post_id=<?= htmlspecialchars($post['id'])?>&redirect=/home">
 									<button type="submit" class="delete-button">Delete Post</button>
 								</form>
 							<?php endif; ?>

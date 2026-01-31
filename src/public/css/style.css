@@ -306,6 +306,24 @@ main {
 	background: var(--bg-light);
 }
 
+@media (min-width: 1100px) {
+	#galleries-container {
+		max-height: 70vh;
+		overflow-y: auto;
+	}
+}
+
+@media (max-width: 1100px) {
+	.gallery .image {
+		max-width: 250px !important;
+		max-height: 250px !important;
+	}
+
+	.gallery {
+		margin-bottom: 12px;
+	}
+}
+
 #webcam {
 	max-width: 500px;
 	max-height: 500px;
@@ -333,6 +351,29 @@ main {
 	align-items: center;
 	gap: 16px;
 	background: var(--bg-light);
+}
+
+.gallery {
+	position: relative;
+	display: inline-block;
+}
+
+.gallery img.image {
+	display: block;
+	max-width: 100%;
+	height: auto;
+}
+
+.gallery .delete-button {
+	position: absolute;
+	bottom: 24px;
+	right: 8px;
+	z-index: 10;
+	border: none;
+	padding: 6px;
+	border-radius: 6px;
+	font-size: x-small;
+	cursor: pointer;
 }
 
 .gallery .image {

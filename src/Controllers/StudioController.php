@@ -24,7 +24,7 @@ class StudioController
 			$pdo = Database::getConnection();
 			$postModel = new PostModel($pdo);
 
-			$images = $postModel->getLastUserPosts(6, $_SESSION['user_id']);
+			$images = $postModel->getLastUserPosts($_SESSION['user_id']);
 
 			include __DIR__ . '/../Views/studio.php';
 		}

@@ -326,11 +326,12 @@ class PostController
 			}
 
 			$postId = isset($_GET['post_id']) ? trim($_GET['post_id']) : '';
+			$redirectLocation = isset($_GET['redirect']) ? trim($_GET['redirect']) : '/home';
 
 			if (empty($postId)) {
 				ErrorHandler::handleError(
 					'All fields are required.',
-					'/home',
+					$redirectLocation,
 					400,
 					False
 				);
@@ -344,7 +345,7 @@ class PostController
 			if (!$post) {
 				ErrorHandler::handleError(
 					'Invalid or deleted post.',
-					'/home',
+					$redirectLocation,
 					400,
 					False
 				);
@@ -353,7 +354,7 @@ class PostController
 			if ($_SESSION['user_id'] !== $post['user_id']) {
 				ErrorHandler::handleError(
 					'You are not allowed to perform this action',
-					'/home',
+					$redirectLocation,
 					403,
 					False
 				);
@@ -369,7 +370,7 @@ class PostController
 			$pdo->commit();
 			
 			$_SESSION['success'] = "Post deleted successfully!";
-			header('Location: /home');
+			header('Location: ' . $redirectLocation);
 			exit();
 		}
 		catch (\Exception $e) {
