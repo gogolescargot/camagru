@@ -3,6 +3,8 @@ services:
     image: php:8.4-fpm
     container_name: php-fpm
     env_file: .env
+    environment:
+      MYSQL_HOST: mysql
     volumes:
       - ./src:/var/www/html
       - uploads_data:/var/www/uploads
@@ -11,6 +13,8 @@ services:
       sh -c "apt-get update &&
       apt-get install -y msmtp &&
       docker-php-ext-install pdo_mysql &&
+      chown -R www-data:www-data /var/www/uploads &&
+      chmod -R 775 /var/www/uploads &&
       php-fpm"
 
   nginx:
@@ -29,12 +33,6 @@ services:
     image: mysql:9.3
     container_name: mysql
     env_file: .env
-    environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-      MYSQL_DATABASE: ${MYSQL_DATABASE}
-      MYSQL_USER: ${MYSQL_USER}
-      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
-      MYSQL_HOST: mysql
     volumes:
       - db_data:/var/lib/mysql
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql

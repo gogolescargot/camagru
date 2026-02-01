@@ -46,3 +46,7 @@ CREATE TABLE IF NOT EXISTS comments (
 	FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
 	FOREIGN KEY (post_id) REFERENCES posts(id) ON DELETE CASCADE
 );
+
+INSERT INTO users (username, email, password, verified)
+SELECT 'test', 'test@example.com', '$2y$10$Ztylqz7ztPGymsZ/TxDjxOYRegz7JZ1TQP6pACwiGvP8llN2ZeM0.', TRUE
+WHERE NOT EXISTS (SELECT 1 FROM users WHERE email = 'test@example.com');
