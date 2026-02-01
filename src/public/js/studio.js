@@ -5,7 +5,9 @@ const CANVA_SIZE = 720
 const studioError = document.getElementById('studio-error');
 const studioSuccess = document.getElementById('studio-success');
 const webcamCanvas = document.getElementById('webcam-canvas');
+const canvasLoading = document.getElementById('canvas-loading');
 const postButton = document.getElementById('post-button');
+const resetStickerButton = document.getElementById('reset-sticker-button');
 const fileInput = document.getElementById('image');
 const removeImageButton = document.getElementById('remove-image-button');
 
@@ -16,6 +18,20 @@ video.setAttribute('playsinline', true);
 let stickersOnCanvas = [];
 let draggedStickerSrc = null;
 let isUsingWebcam = true;
+let webcamFirstFrameRendered = false;
+const stickerCache = new Map();
+
+function showCanvasLoading() {
+	if (!canvasLoading) return;
+	canvasLoading.classList.add('show');
+	canvasLoading.setAttribute('aria-hidden', 'false');
+}
+
+function hideCanvasLoading() {
+	if (!canvasLoading) return;
+	canvasLoading.classList.remove('show');
+	canvasLoading.setAttribute('aria-hidden', 'true');
+}
 
 function updatePostButtonState() {
 	if (!postButton) {
@@ -40,6 +56,8 @@ function displaySuccess(message) {
 }
 
 function initializeWebcam() {
+	webcamFirstFrameRendered = false;
+	showCanvasLoading();
 	navigator.mediaDevices
 		.getUserMedia({
 			video: {
@@ -55,6 +73,7 @@ function initializeWebcam() {
 			drawWebcam();
 		})
 		.catch(() => {
+			hideCanvasLoading();
 			displayError('Unable to access the webcam.');
 		});
 }
@@ -103,10 +122,28 @@ function handlePostButtonClick() {
 		});
 }
 
+function handleResetStickerButtonClick() {
+	stickersOnCanvas = [];
+	drawStickers();
+	updatePostButtonState();
+}
+
 function handleFileInputChange(e) {
 	const file = e.target.files[0];
 	if (!file) {
 		displayError('No file selected.');
+		return;
+	}
+
+	if (!file.type || !file.type.startsWith('image/')) {
+		displayError('Failed to load the selected image.');
+		e.target.value = '';
+		return;
+	}
+
+	if (file.size == 0) {
+		displayError('Failed to load the selected image.');
+		e.target.value = '';
 		return;
 	}
 
@@ -126,6 +163,7 @@ function handleFileInputChange(e) {
 		isUsingWebcam = false;
 		stickersOnCanvas = [];
 		updatePostButtonState();
+		showCanvasLoading();
 		drawImage(file);
 		removeImageButton.style.display = 'block';
 	}
@@ -133,6 +171,7 @@ function handleFileInputChange(e) {
 
 function handleStickerDragStart(e) {
 	draggedStickerSrc = e.target.src;
+	draggedStickerImg = e.target;
 }
 
 function handleCanvasDragOver(e) {
@@ -173,6 +212,11 @@ function drawWebcam() {
 		ctx.drawImage(video, 0, 0, CANVA_SIZE, CANVA_SIZE);
 
 		drawStickers();
+
+		if (!webcamFirstFrameRendered) {
+			webcamFirstFrameRendered = true;
+			hideCanvasLoading();
+		}
 	}
 	requestAnimationFrame(drawWebcam);
 }
@@ -198,6 +242,7 @@ function drawImage(file) {
 			ctx.drawImage(img, x, y, width, height);
 
 			drawStickers();
+			hideCanvasLoading();
 		};
 	};
 	reader.readAsDataURL(file);
@@ -206,13 +251,21 @@ function drawImage(file) {
 function drawStickers() {
 	const ctx = webcamCanvas.getContext('2d');
 	stickersOnCanvas.forEach((sticker) => {
-		const img = new Image();
-		img.src = sticker.src;
-		img.onload = () => {
-			ctx.drawImage(img, sticker.x - 75, sticker.y - 75, 150, 150);
+		let img = stickerCache.get(sticker.src);
+		if (!img) {
+			img = new Image();
+			img.src = sticker.src;
+			stickerCache.set(sticker.src, img);
+		}
+		const draw = () => {
+			try {
+				ctx.drawImage(img, sticker.x - 75, sticker.y - 75, 150, 150);
+			} catch (err) { }
 		};
 		if (img.complete) {
-			ctx.drawImage(img, sticker.x - 75, sticker.y - 75, 150, 150);
+			draw();
+		} else {
+			img.addEventListener('load', draw, { once: true });
 		}
 	});
 }
@@ -225,16 +278,26 @@ if (postButton) {
 	postButton.addEventListener('click', handlePostButtonClick);
 }
 
+if (resetStickerButton) {
+	resetStickerButton.addEventListener('click', handleResetStickerButtonClick);
+}
+
 if (fileInput) {
 	fileInput.addEventListener('change', handleFileInputChange);
 }
 
-document.querySelectorAll('.sticker').forEach((img) => {
-	img.addEventListener('dragstart', handleStickerDragStart);
-});
+function preloadStickers() {
+	document.querySelectorAll('.sticker').forEach((el) => {
+		const img = new Image();
+		img.src = el.src;
+		stickerCache.set(el.src, img);
+		el.addEventListener('dragstart', handleStickerDragStart);
+	});
+}
 
 webcamCanvas.addEventListener('dragover', handleCanvasDragOver);
 webcamCanvas.addEventListener('drop', handleCanvasDrop);
 
+preloadStickers();
 initializeWebcam();
 updatePostButtonState();

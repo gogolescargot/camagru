@@ -13,7 +13,10 @@
 			<div id="studio-container">
 				<div id="edit-container">
 					<div id="preview-container">
-						<canvas id="webcam-canvas"></canvas>
+						<div id="canvas-wrapper">
+							<canvas id="webcam-canvas"></canvas>
+							<div id="canvas-loading" aria-hidden="true">Chargement…</div>
+						</div>
 						<div id="image-container">
 							<label for="image">Background:</label>
 							<input type="file" id="image" name="image" accept="image/*">
@@ -22,6 +25,7 @@
 						<div id="post-container">
 							<input type="text" name="title" id="title" maxlength="255" placeholder="Title of your post">
 							<button id="post-button">Post</button>
+							<button id="reset-sticker-button">Reset</button>
 						</div>
 						</form>
 					</div>

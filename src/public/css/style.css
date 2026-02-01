@@ -308,7 +308,6 @@ main {
 
 @media (min-width: 1100px) {
 	#galleries-container {
-		max-height: 70vh;
 		overflow-y: auto;
 	}
 }
@@ -325,8 +324,6 @@ main {
 }
 
 #webcam {
-	max-width: 500px;
-	max-height: 500px;
 	border: 2px solid var(--border);
 	background: var(--bg-dark);
 }
@@ -396,6 +393,7 @@ main {
 
 #image-container {
 	display: flex;
+	flex-wrap: wrap;
 	align-items: center;
 	gap: 8px;
 	margin: 16px 0;
@@ -414,6 +412,9 @@ main {
 	padding: 6px 8px;
 	font-family: monospace;
 	font-size: 1rem;
+	flex: 1 1 auto;
+	min-width: 0;
+	box-sizing: border-box;
 }
 
 #remove-image-button {
@@ -433,6 +434,7 @@ main {
 
 #post-container {
 	display: flex;
+	flex-wrap: wrap;
 	justify-content: center;
 	align-items: center;
 	gap: 8px;
@@ -449,6 +451,12 @@ main {
 	font-size: 1rem;
 	font-family: monospace;
 	box-sizing: border-box;
+	min-width: 0;
+	max-width: 100%;
+}
+
+#preview-container {
+	width: 100%;
 }
 
 #post-button {
@@ -474,6 +482,25 @@ main {
 	background: var(--border-muted);
 	color: var(--text-muted);
 	cursor: not-allowed;
+}
+
+#reset-sticker-button {
+	width: auto;
+	min-width: 80px;
+	padding: 8px 18px;
+	background: var(--danger);
+	color: var(--bg-dark);
+	border: none;
+	border-radius: 6px;
+	font-weight: bold;
+	font-size: 1rem;
+	font-family: monospace;
+	cursor: pointer;
+	transition: background 0.2s;
+}
+
+#reset-sticker-button:hover {
+	background: var(--secondary);
 }
 
 .sticker {
@@ -733,6 +760,35 @@ footer a:hover {
 	word-break: break-word;
 }
 
+#webcam-canvas {
+	border-radius: 5px;
+}
+
+#canvas-wrapper {
+	position: relative;
+	max-height: 720px;
+	width: 100%;
+}
+
+#canvas-loading {
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	opacity: 0;
+	pointer-events: none;
+	z-index: 30;
+}
+
+#canvas-loading.show {
+	opacity: 1;
+	pointer-events: auto;
+}
+
 @media (max-width: 1100px) {
 	#studio-container {
 		flex-direction: column;
@@ -749,6 +805,7 @@ footer a:hover {
 		justify-content: center;
 		margin-top: 16px;
 		padding-left: 0;
+		flex-wrap: wrap;
 	}
 }
 
@@ -766,5 +823,9 @@ footer a:hover {
 	.sticker {
 		max-width: 60px;
 		max-height: 60px;
+	}
+
+	nav ul {
+		flex-wrap: wrap;
 	}
 }
