@@ -24,6 +24,11 @@ class ErrorHandler
 			$_SESSION['error'] = $message;
 		}
 
+		if ($code) {
+			$_SESSION['error_code'] = $code;
+			http_response_code($code);
+		}
+
 		error_log("[User ID: " . ($_SESSION['user_id'] ?? 'guest') . "] " . $message);
 		header("Location: $redirect");
 		exit();

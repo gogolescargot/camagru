@@ -20,6 +20,7 @@ $router->addRoute('GET', '/forgot-password', 'ForgotPasswordController', 'index'
 $router->addRoute('GET', '/reset-password', 'ResetPasswordController', 'index');
 $router->addRoute('GET', '/verify-account', 'VerifyAccountController', 'verifyAccount');
 $router->addRoute('GET', '/edit-email', 'EditEmailController', 'editEmail');
+$router->addRoute('GET', '/error', 'ErrorController', 'index');
 
 $router->addRoute('POST', '/login', 'AuthController', 'login');
 $router->addRoute('POST', '/register', 'AuthController', 'register');

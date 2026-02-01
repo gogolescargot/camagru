@@ -46,7 +46,7 @@ class Router
 			}
 		}
 
-		http_response_code(404);
+		ErrorHandler::handleError("Page not found", "/error" ,404, False);
 		exit();
 	}
 }

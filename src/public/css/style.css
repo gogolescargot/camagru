@@ -701,6 +701,38 @@ footer a:hover {
 	color: var(--bg-dark);
 }
 
+.error-page {
+	padding: 48px 16px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	min-height: 60vh;
+	box-sizing: border-box;
+}
+
+.error-message {
+	max-width: 720px;
+	width: 100%;
+	background: var(--bg-light);
+	color: var(--text);
+	border: 3px solid var(--border);
+	padding: 24px;
+	border-radius: 12px;
+	box-shadow: 0 6px 30px rgba(0, 0, 0, 0.18);
+	text-align: center;
+}
+
+.error-message h1 {
+	margin: 0 0 8px 0;
+	color: var(--danger);
+}
+
+.error-message p {
+	margin: 8px 0 0 0;
+	color: var(--text-muted);
+	word-break: break-word;
+}
+
 @media (max-width: 1100px) {
 	#studio-container {
 		flex-direction: column;
