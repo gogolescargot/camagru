@@ -15,7 +15,7 @@
 					<div id="preview-container">
 						<div id="canvas-wrapper">
 							<canvas id="webcam-canvas"></canvas>
-							<div id="canvas-loading" aria-hidden="true">Chargement…</div>
+							<div id="canvas-loading" aria-hidden="true">Loading...</div>
 						</div>
 						<div id="image-container">
 							<label for="image">Background:</label>
