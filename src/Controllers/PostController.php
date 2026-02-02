@@ -198,9 +198,11 @@ class PostController
 
 	public function createPost()
 	{
+		$STICKER_SIZE = 150;
+
 		try {
 			if (!isset($_SESSION['user_id'])) {
-				ErrorHandler::ErrorHandler::handleError(
+				ErrorHandler::handleError(
 					'You must be logged in to perform this action.',
 					'/home',
 					403,
@@ -289,6 +291,15 @@ class PostController
 					'There was an error moving the uploaded file.',
 					True
 				);
+			}
+
+			$stickersJson = $_POST['stickers'] ?? '';
+			
+			if (!empty($stickersJson)) {
+				$stickers = json_decode($stickersJson, true);
+				if (json_last_error() === JSON_ERROR_NONE && is_array($stickers) && count($stickers) > 0) {
+					ImageHelper::applyStickersToImage($destPath, $stickers, $STICKER_SIZE);
+				}
 			}
 
 			$pdo = Database::getConnection();

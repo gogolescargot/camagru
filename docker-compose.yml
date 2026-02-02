@@ -11,8 +11,9 @@ services:
       - ./php.ini:/usr/local/etc/php/php.ini
     command: >
       sh -c "apt-get update &&
-      apt-get install -y msmtp &&
-      docker-php-ext-install pdo_mysql &&
+      apt-get install -y msmtp libpng-dev libjpeg-dev libfreetype6-dev &&
+      docker-php-ext-configure gd --with-freetype --with-jpeg &&
+      docker-php-ext-install gd pdo_mysql &&
       chown -R www-data:www-data /var/www/uploads &&
       chmod -R 775 /var/www/uploads &&
       php-fpm"

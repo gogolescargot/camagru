@@ -28,7 +28,13 @@
 							<button id="reset-sticker-button">Reset</button>
 						</div>
 						</form>
+
+						<div id="studio-messages">
+							<p id="studio-error"></p>
+							<p id="studio-success"></p>
+						</div>
 					</div>
+
 					<div id="stickers-container">
 						<img src="/stickers/sticker_1.png" class="sticker" draggable="true"/>
 						<img src="/stickers/sticker_2.png" class="sticker" draggable="true"/>
@@ -52,8 +58,6 @@
 					<?php endif; ?>
 				</div>
 			</div>
-			<p id="studio-error"></p>
-			<p id="studio-success"></p>
 		</main>
 		<?php include __DIR__ . '/partials/footer.php'; ?>
 	</body>

@@ -296,6 +296,11 @@ main {
 	max-width: 1200px;
 }
 
+#studio-messages {
+	display: flex;
+	align-items: center;
+}
+
 #galleries-container {
 	border: 3px solid var(--border);
 	border-radius: 12px;

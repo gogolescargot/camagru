@@ -1,7 +1,9 @@
 import { b64toBlob } from './b64toBlob.js';
 
 const MAX_SIZE = 20 * 1024 * 1024;
-const CANVA_SIZE = 720
+const CANVA_SIZE = 720;
+const STICKER_SIZE = 150;
+const MAX_STICKERS = 10;
 const studioError = document.getElementById('studio-error');
 const studioSuccess = document.getElementById('studio-success');
 const webcamCanvas = document.getElementById('webcam-canvas');
@@ -20,6 +22,7 @@ let draggedStickerSrc = null;
 let isUsingWebcam = true;
 let webcamFirstFrameRendered = false;
 const stickerCache = new Map();
+const baseCanvas = document.createElement('canvas');
 
 function showCanvasLoading() {
 	if (!canvasLoading) return;
@@ -85,15 +88,13 @@ function handlePostButtonClick() {
 	}
 
 	if (isUsingWebcam) {
-		webcamCanvas.width = video.videoWidth;
-		webcamCanvas.height = video.videoHeight;
-		const ctx = webcamCanvas.getContext('2d');
-		ctx.drawImage(video, 0, 0, webcamCanvas.width, webcamCanvas.height);
+		baseCanvas.width = video.videoWidth || CANVA_SIZE;
+		baseCanvas.height = video.videoHeight || CANVA_SIZE;
+		const baseCtx = baseCanvas.getContext('2d');
+		baseCtx.drawImage(video, 0, 0, baseCanvas.width, baseCanvas.height);
 	}
 
-	drawStickers();
-
-	const imageData = webcamCanvas.toDataURL('image/png');
+	const imageData = baseCanvas.toDataURL('image/png');
 	const blob = b64toBlob(imageData, 'image/png');
 
 	const formData = new FormData();
@@ -103,6 +104,27 @@ function handlePostButtonClick() {
 	if (titleInput) {
 		formData.append('title', titleInput.value);
 	}
+
+	const getIdFromSrc = (src) => {
+		try {
+			const parts = src.split('/');
+			const name = parts[parts.length - 1];
+			return name.split('.').slice(0, -1).join('.');
+		} catch (err) {
+			return src;
+		}
+	};
+
+	const stickersPayload = stickersOnCanvas.map((s) => ({
+		id: getIdFromSrc(s.src),
+		src: s.src,
+		x: s.x,
+		y: s.y,
+		width: STICKER_SIZE,
+		height: STICKER_SIZE,
+	}));
+
+	formData.append('stickers', JSON.stringify(stickersPayload));
 
 	fetch('/create-post', {
 		method: 'POST',
@@ -118,7 +140,7 @@ function handlePostButtonClick() {
 			}
 		})
 		.catch((error) => {
-			displayError('Failed to upload the post.');
+			// displayError("An error occurred while creating the post.");
 		});
 }
 
@@ -180,6 +202,11 @@ function handleCanvasDragOver(e) {
 
 function handleCanvasDrop(e) {
 	e.preventDefault();
+	if (stickersOnCanvas.length >= MAX_STICKERS) {
+		displayError(`You can only add up to ${MAX_STICKERS} stickers.`);
+		return;
+	}
+
 	if (!draggedStickerSrc) return;
 
 	const rect = webcamCanvas.getBoundingClientRect();
@@ -206,6 +233,12 @@ function drawWebcam() {
 	if (!isUsingWebcam) return;
 
 	if (video.readyState === video.HAVE_ENOUGH_DATA) {
+		// Keep a base canvas with the background-only (no stickers)
+		baseCanvas.width = CANVA_SIZE;
+		baseCanvas.height = CANVA_SIZE;
+		const baseCtx = baseCanvas.getContext('2d');
+		baseCtx.drawImage(video, 0, 0, CANVA_SIZE, CANVA_SIZE);
+
 		webcamCanvas.width = CANVA_SIZE;
 		webcamCanvas.height = CANVA_SIZE;
 		const ctx = webcamCanvas.getContext('2d');
@@ -241,6 +274,13 @@ function drawImage(file) {
 
 			ctx.drawImage(img, x, y, width, height);
 
+			// Also draw to baseCanvas so we have a background-only version
+			baseCanvas.width = CANVA_SIZE;
+			baseCanvas.height = CANVA_SIZE;
+			const baseCtx = baseCanvas.getContext('2d');
+			baseCtx.clearRect(0, 0, baseCanvas.width, baseCanvas.height);
+			baseCtx.drawImage(img, x, y, width, height);
+
 			drawStickers();
 			hideCanvasLoading();
 		};
@@ -259,7 +299,7 @@ function drawStickers() {
 		}
 		const draw = () => {
 			try {
-				ctx.drawImage(img, sticker.x - 75, sticker.y - 75, 150, 150);
+				ctx.drawImage(img, sticker.x - (STICKER_SIZE / 2), sticker.y - (STICKER_SIZE / 2), STICKER_SIZE, STICKER_SIZE);
 			} catch (err) { }
 		};
 		if (img.complete) {
