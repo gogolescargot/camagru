@@ -88,10 +88,11 @@ function handlePostButtonClick() {
 	}
 
 	if (isUsingWebcam) {
-		baseCanvas.width = video.videoWidth || CANVA_SIZE;
-		baseCanvas.height = video.videoHeight || CANVA_SIZE;
+		// force square crop capture
+		baseCanvas.width = CANVA_SIZE;
+		baseCanvas.height = CANVA_SIZE;
 		const baseCtx = baseCanvas.getContext('2d');
-		baseCtx.drawImage(video, 0, 0, baseCanvas.width, baseCanvas.height);
+		drawVideoToCanvas(video, baseCtx, baseCanvas.width, baseCanvas.height);
 	}
 
 	const imageData = baseCanvas.toDataURL('image/png');
@@ -229,6 +230,17 @@ function handleRemoveImage() {
 	initializeWebcam();
 }
 
+function drawVideoToCanvas(srcVideo, destCtx, destW, destH) {
+	const vw = srcVideo.videoWidth || srcVideo.width || 0;
+	const vh = srcVideo.videoHeight || srcVideo.height || 0;
+	if (!vw || !vh) return false;
+	const side = Math.min(vw, vh);
+	const sx = Math.floor((vw - side) / 2);
+	const sy = Math.floor((vh - side) / 2);
+	destCtx.drawImage(srcVideo, sx, sy, side, side, 0, 0, destW, destH);
+	return true;
+}
+
 function drawWebcam() {
 	if (!isUsingWebcam) return;
 
@@ -237,12 +249,12 @@ function drawWebcam() {
 		baseCanvas.width = CANVA_SIZE;
 		baseCanvas.height = CANVA_SIZE;
 		const baseCtx = baseCanvas.getContext('2d');
-		baseCtx.drawImage(video, 0, 0, CANVA_SIZE, CANVA_SIZE);
+		drawVideoToCanvas(video, baseCtx, CANVA_SIZE, CANVA_SIZE);
 
 		webcamCanvas.width = CANVA_SIZE;
 		webcamCanvas.height = CANVA_SIZE;
 		const ctx = webcamCanvas.getContext('2d');
-		ctx.drawImage(video, 0, 0, CANVA_SIZE, CANVA_SIZE);
+		drawVideoToCanvas(video, ctx, CANVA_SIZE, CANVA_SIZE);
 
 		drawStickers();
 
