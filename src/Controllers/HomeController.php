@@ -37,7 +37,15 @@ class HomeController
 				$post['like_count'] = $likesByPostId[$post['id']] ?? 0;
 				$post['comments'] = $commentsByPostId[$post['id']] ?? [];
 				$post['liked'] = $current_user_id ? !empty($postModel->findLikePost($post['id'], $current_user_id)) : false;
-				$post['sn_url'] = urlencode("http://{$_SERVER['HTTP_HOST']}/uploads/{$post['image_path']}");
+				if (isset($_SESSION['user_id']) && $_SESSION['user_id'] == $post['user_id']) { 
+					$scheme = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
+					$postUrl = $scheme . '://' . $_SERVER['HTTP_HOST'] . '/uploads/' . $post['image_path'];
+					$post['post_url'] = $postUrl;
+					$post['sn_url'] = rawurlencode($postUrl);
+					$tweetText = rawurlencode('Look at my picture on camagru !');
+					$post['x_href'] = 'https://x.com/intent/tweet?text=' . $tweetText . '&url=' . rawurlencode($postUrl);
+					$post['fb_href'] = 'https://www.facebook.com/sharer/sharer.php?u=' . rawurlencode($postUrl);
+				}
 			}
 			unset($post);
 

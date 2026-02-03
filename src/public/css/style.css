@@ -182,7 +182,8 @@ main {
 	text-align: center;
 }
 
-.post form button {
+.post form button,
+.primary-button {
 	width: auto;
 	min-width: 80px;
 	padding: 8px 18px;
@@ -200,7 +201,8 @@ main {
 	align-self: stretch;
 }
 
-.post form button:hover {
+.post form button:hover,
+.primary-button:hover {
 	background: var(--secondary);
 }
 
