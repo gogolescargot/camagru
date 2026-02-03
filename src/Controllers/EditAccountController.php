@@ -16,7 +16,7 @@ class EditAccountController
 			if (!isset($_SESSION['user_id'])) {
 				ErrorHandler::handleError(
 					'You must be logged in to perform this action.',
-					'/home',
+					'/login',
 					403,
 					False
 				);
@@ -75,7 +75,7 @@ class EditAccountController
 			if (!isset($_SESSION['user_id'])) {
 				ErrorHandler::handleError(
 					'You must be logged in to perform this action.',
-					'/home',
+					'/login',
 					403,
 					False
 				);
@@ -146,7 +146,7 @@ class EditAccountController
 			if (!isset($_SESSION['user_id'])) {
 				ErrorHandler::handleError(
 					'You must be logged in to perform this action.',
-					'/home',
+					'/login',
 					403,
 					False
 				);
@@ -212,7 +212,7 @@ class EditAccountController
 			if (!isset($_SESSION['user_id'])) {
 				ErrorHandler::handleError(
 					'You must be logged in to perform this action.',
-					'/home',
+					'/login',
 					403,
 					False
 				);
